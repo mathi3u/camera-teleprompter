@@ -10,7 +10,7 @@ struct MainWindowView: View {
         @Bindable var state = state
 
         ZStack {
-            Color.black.opacity(0.85).ignoresSafeArea()
+            Color.black.opacity(0.70).ignoresSafeArea()
 
             switch state.phase {
             case .idle:

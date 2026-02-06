@@ -63,18 +63,18 @@ struct TeleprompterScrollView: View {
         }
         .clipped()
         .overlay(alignment: .top) {
-            LinearGradient(colors: [.black.opacity(0.85), .clear],
+            LinearGradient(colors: [.black.opacity(0.70), .clear],
                            startPoint: .top, endPoint: .bottom)
                 .frame(height: 12)
                 .allowsHitTesting(false)
         }
         .overlay(alignment: .bottom) {
-            LinearGradient(colors: [.clear, .black.opacity(0.85)],
+            LinearGradient(colors: [.clear, .black.opacity(0.70)],
                            startPoint: .top, endPoint: .bottom)
                 .frame(height: 12)
                 .allowsHitTesting(false)
         }
-        .background(Color.black.opacity(0.85))
+        .background(Color.black.opacity(0.70))
     }
 
     private func startScrolling() {

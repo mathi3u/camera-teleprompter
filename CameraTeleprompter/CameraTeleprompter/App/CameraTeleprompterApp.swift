@@ -92,7 +92,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             window.setFrame(NSRect(x: x, y: y, width: windowWidth, height: windowHeight), display: true)
             window.level = .floating
             window.isOpaque = false
-            window.backgroundColor = .black
+            window.backgroundColor = .clear
             window.hasShadow = false
             window.titlebarAppearsTransparent = true
             window.titleVisibility = .hidden
