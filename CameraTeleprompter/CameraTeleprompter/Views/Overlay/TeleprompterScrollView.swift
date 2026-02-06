@@ -29,14 +29,17 @@ struct TeleprompterScrollView: View {
         return CGFloat(t * t * (3 - 2 * t))
     }
 
-    /// Position-based slowdown near the end
+    /// Position-based slowdown: only kicks in when ~2/3 of the last line is visible
     private func endSlowdown(at pos: CGFloat) -> CGFloat {
         guard maxOffset > 0 else { return 1.0 }
-        let rampDistance = max(state.fontSize * 1.4 * 5, viewportHeight * 0.5)
+        // Ramp distance = roughly 2 lines of text
+        let lineHeight = state.fontSize * 1.4
+        let rampDistance = lineHeight * 2
         let remaining = maxOffset - pos
         if remaining >= rampDistance { return 1.0 }
         let t = max(0, remaining / rampDistance)
-        return max(0.05, t * t * (3 - 2 * t))
+        // Smooth ease-out to gentle stop
+        return max(0.02, t * t * (3 - 2 * t))
     }
 
     var body: some View {
