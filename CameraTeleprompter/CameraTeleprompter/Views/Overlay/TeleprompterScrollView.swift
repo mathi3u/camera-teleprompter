@@ -39,6 +39,7 @@ struct TeleprompterScrollView: View {
                 .multilineTextAlignment(.leading)
                 .frame(width: geo.size.width - 24, alignment: .leading)
                 .padding(.horizontal, 12)
+                .padding(.bottom, viewportHeight * 0.4)
                 .fixedSize(horizontal: false, vertical: true)
                 .background(
                     GeometryReader { textGeo in
