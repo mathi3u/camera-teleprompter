@@ -39,11 +39,11 @@ struct CameraTeleprompterApp: App {
             case 49: // Space - pause/resume
                 state.scrollEngine.togglePause()
                 return nil
-            case 123: // Left arrow - slower
-                state.scrollEngine.adjustSpeed(by: -10)
+            case 123: // Left arrow - skip back
+                state.scrollNudge -= 1
                 return nil
-            case 124: // Right arrow - faster
-                state.scrollEngine.adjustSpeed(by: 10)
+            case 124: // Right arrow - skip forward
+                state.scrollNudge += 1
                 return nil
             case 53: // Escape - stop
                 stopTeleprompter()

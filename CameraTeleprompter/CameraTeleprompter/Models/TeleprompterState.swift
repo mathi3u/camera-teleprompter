@@ -32,6 +32,8 @@ final class TeleprompterState {
     // MARK: - State
     var phase: AppPhase = .idle
     var isOverlayVisible: Bool = false
+    /// Accumulated skip nudge from arrow keys (consumed by scroll view)
+    var scrollNudge: CGFloat = 0
 
     // MARK: - Engines
     let scrollEngine = ScrollEngine()
