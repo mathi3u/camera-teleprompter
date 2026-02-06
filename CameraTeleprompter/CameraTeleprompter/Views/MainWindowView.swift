@@ -10,7 +10,7 @@ struct MainWindowView: View {
         @Bindable var state = state
 
         ZStack {
-            Color.black.opacity(0.70).ignoresSafeArea()
+            Color.black.opacity(state.windowOpacity).ignoresSafeArea()
 
             switch state.phase {
             case .idle:
@@ -40,6 +40,15 @@ struct MainWindowView: View {
             case .running:
                 TeleprompterScrollView()
                     .environment(state)
+            }
+        }
+        .contextMenu {
+            Button("Preferences...") {
+                NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+            }
+            Divider()
+            Button("Quit") {
+                NSApplication.shared.terminate(nil)
             }
         }
     }

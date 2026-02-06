@@ -21,6 +21,7 @@ final class TeleprompterState {
     var fontSize: CGFloat = 24
     var textColor: Color = .white
     var scrollSpeed: CGFloat = 30
+    var windowOpacity: CGFloat = 0.70
     var displayMode: DisplayMode = .notch
 
     // MARK: - Audio

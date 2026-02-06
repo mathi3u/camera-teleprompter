@@ -17,6 +17,11 @@ struct CameraTeleprompterApp: App {
         .windowStyle(.hiddenTitleBar)
         .defaultSize(width: 500, height: 220)
         .defaultPosition(.top)
+
+        Settings {
+            PreferencesView()
+                .environment(state)
+        }
     }
 
     private func startTeleprompter() {
