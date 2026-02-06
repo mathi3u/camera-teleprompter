@@ -16,7 +16,7 @@ struct MainWindowView: View {
             case .idle:
                 VStack(spacing: 0) {
                     TextEditor(text: $state.currentScript.body)
-                        .font(.system(size: 16, design: .monospaced))
+                        .font(.system(size: state.fontSize, design: .monospaced))
                         .foregroundStyle(.white)
                         .scrollContentBackground(.hidden)
                         .padding(12)
