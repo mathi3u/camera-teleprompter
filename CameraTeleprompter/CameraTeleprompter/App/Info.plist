@@ -3,7 +3,9 @@
 <plist version="1.0">
 <dict>
     <key>LSUIElement</key>
-    <true/>
+    <false/>
+    <key>NSMainNibFile</key>
+    <string></string>
     <key>NSMicrophoneUsageDescription</key>
     <string>Camera Teleprompter uses the microphone to detect when you are speaking so it can automatically scroll your script.</string>
 </dict>

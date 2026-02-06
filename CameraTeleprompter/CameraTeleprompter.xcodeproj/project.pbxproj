@@ -25,6 +25,7 @@
 		AA000016 /* VoiceLevelIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000016; };
 		AA000017 /* NSScreen+Notch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000017; };
 		AA000018 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB000018; };
+		AA000021 /* MainWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000021; };
 		AA100001 /* ScrollEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB100001; };
 		AA100002 /* AudioLevelMonitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB100002; };
 		AA100003 /* ScriptStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB100003; };
@@ -62,6 +63,7 @@
 		AB000018 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AB000019 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AB000020 /* CameraTeleprompter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CameraTeleprompter.entitlements; sourceTree = "<group>"; };
+		AB000021 /* MainWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowView.swift; sourceTree = "<group>"; };
 		AB100001 /* ScrollEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollEngineTests.swift; sourceTree = "<group>"; };
 		AB100002 /* AudioLevelMonitorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioLevelMonitorTests.swift; sourceTree = "<group>"; };
 		AB100003 /* ScriptStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptStoreTests.swift; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 		C0000007 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				AB000021 /* MainWindowView.swift */,
 				C0000011 /* MenuBarPopover */,
 				C0000012 /* Overlay */,
 			);
@@ -324,6 +327,7 @@
 				AA000015 /* CountdownView.swift in Sources */,
 				AA000016 /* VoiceLevelIndicator.swift in Sources */,
 				AA000017 /* NSScreen+Notch.swift in Sources */,
+				AA000021 /* MainWindowView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -476,7 +480,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CameraTeleprompter/App/Info.plist;
-				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_LSUIElement = NO;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Camera Teleprompter uses the microphone to detect when you are speaking so it can automatically scroll your script.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -501,7 +505,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CameraTeleprompter/App/Info.plist;
-				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_LSUIElement = NO;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Camera Teleprompter uses the microphone to detect when you are speaking so it can automatically scroll your script.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -27,7 +27,7 @@ final class TeleprompterState {
     var voiceThreshold: Float = -30 // dB
     var currentAudioLevel: Float = -160
     var isSpeaking: Bool = false
-    var isVoiceControlEnabled: Bool = true
+    var isVoiceControlEnabled: Bool = false
 
     // MARK: - State
     var phase: AppPhase = .idle

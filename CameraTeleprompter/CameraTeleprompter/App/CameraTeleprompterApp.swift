@@ -3,104 +3,56 @@ import SwiftUI
 @main
 struct CameraTeleprompterApp: App {
     @State private var state = TeleprompterState()
-    @State private var overlayController: OverlayWindowController?
-    @State private var audioMonitor = AudioLevelMonitor()
-    @State private var countdownTimer: Timer?
     @State private var keyMonitor: Any?
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var body: some Scene {
-        MenuBarExtra("Teleprompter", systemImage: "text.viewfinder") {
-            MenuBarContentView(
+        WindowGroup {
+            MainWindowView(
                 onStart: startTeleprompter,
                 onStop: stopTeleprompter
             )
             .environment(state)
         }
-        .menuBarExtraStyle(.window)
+        .windowStyle(.hiddenTitleBar)
+        .defaultSize(width: 500, height: 220)
+        .defaultPosition(.top)
     }
 
     private func startTeleprompter() {
-        // Save script
-        saveCurrentScript()
-
-        // Sync settings to engine
         state.scrollEngine.speed = state.scrollSpeed
-
-        // Create overlay
-        if overlayController == nil {
-            overlayController = OverlayWindowController(state: state)
-        }
-        overlayController?.show(mode: state.displayMode)
-
-        // Start countdown
-        state.phase = .countdown(3)
-        var count = 3
-        countdownTimer?.invalidate()
-        countdownTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
-            count -= 1
-            if count > 0 {
-                state.phase = .countdown(count)
-            } else {
-                timer.invalidate()
-                countdownTimer = nil
-                beginScrolling()
-            }
-        }
-    }
-
-    private func beginScrolling() {
         state.phase = .running
         state.scrollEngine.start()
-
-        // Start voice monitoring if enabled
-        if state.isVoiceControlEnabled {
-            audioMonitor.threshold = state.voiceThreshold
-            audioMonitor.start()
-        }
-
-        // Install keyboard monitor
         installKeyMonitor()
-
-        // Start voice-scroll sync
-        startVoiceSync()
     }
 
     private func stopTeleprompter() {
-        countdownTimer?.invalidate()
-        countdownTimer = nil
         state.scrollEngine.stop()
-        audioMonitor.stop()
-        overlayController?.close()
         state.phase = .idle
-        state.isSpeaking = false
-        state.currentAudioLevel = -160
         removeKeyMonitor()
     }
 
-    private func saveCurrentScript() {
-        var scripts = ScriptStore.load()
-        if let idx = scripts.firstIndex(where: { $0.id == state.currentScript.id }) {
-            scripts[idx] = state.currentScript
-        } else {
-            scripts.append(state.currentScript)
-        }
-        ScriptStore.save(scripts)
-    }
-
     private func installKeyMonitor() {
+        removeKeyMonitor()
         keyMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
             switch event.keyCode {
-            case 49: // Space
+            case 49: // Space - pause/resume
                 state.scrollEngine.togglePause()
                 return nil
-            case 126: // Up arrow
-                state.scrollEngine.adjustSpeed(by: 10)
-                return nil
-            case 125: // Down arrow
+            case 123: // Left arrow - slower
                 state.scrollEngine.adjustSpeed(by: -10)
                 return nil
-            case 53: // Escape
+            case 124: // Right arrow - faster
+                state.scrollEngine.adjustSpeed(by: 10)
+                return nil
+            case 53: // Escape - stop
                 stopTeleprompter()
+                return nil
+            case 24: // + key (=+)
+                state.fontSize = min(72, state.fontSize + 2)
+                return nil
+            case 27: // - key
+                state.fontSize = max(10, state.fontSize - 2)
                 return nil
             default:
                 return event
@@ -114,25 +66,38 @@ struct CameraTeleprompterApp: App {
             keyMonitor = nil
         }
     }
+}
 
-    private func startVoiceSync() {
-        // Poll audio levels and sync to scroll engine
-        Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { timer in
-            guard state.isRunning else {
-                timer.invalidate()
-                return
-            }
+// MARK: - App Delegate for window positioning
 
-            state.currentAudioLevel = audioMonitor.currentLevel
-            state.isSpeaking = audioMonitor.isSpeaking
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            guard let window = NSApplication.shared.windows.first else { return }
+            guard let screen = window.screen ?? NSScreen.main else { return }
 
-            if state.isVoiceControlEnabled {
-                if audioMonitor.isSpeaking {
-                    state.scrollEngine.resume()
-                } else {
-                    state.scrollEngine.pause()
-                }
-            }
+            let screenFrame = screen.frame
+            let menuBarHeight = screen.frame.height - screen.visibleFrame.height - screen.visibleFrame.origin.y
+            let windowWidth: CGFloat = 500
+            let windowHeight: CGFloat = 220
+            let x = screenFrame.midX - windowWidth / 2
+            let y = screenFrame.maxY - menuBarHeight - windowHeight
+
+            window.setFrame(NSRect(x: x, y: y, width: windowWidth, height: windowHeight), display: true)
+            window.level = .floating
+            window.isOpaque = false
+            window.backgroundColor = .black
+            window.hasShadow = false
+            window.titlebarAppearsTransparent = true
+            window.titleVisibility = .hidden
+
+            // Hide traffic light buttons
+            window.standardWindowButton(.closeButton)?.isHidden = true
+            window.standardWindowButton(.miniaturizeButton)?.isHidden = true
+            window.standardWindowButton(.zoomButton)?.isHidden = true
+
+            // Make sure window can receive key events
+            window.makeKey()
         }
     }
 }
