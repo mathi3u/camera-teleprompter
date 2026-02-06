@@ -29,18 +29,7 @@ struct TeleprompterScrollView: View {
         return CGFloat(t * t * (3 - 2 * t))
     }
 
-    /// Position-based slowdown: only kicks in when ~2/3 of the last line is visible
-    private func endSlowdown(at pos: CGFloat) -> CGFloat {
-        guard maxOffset > 0 else { return 1.0 }
-        // Ramp distance = roughly 2 lines of text
-        let lineHeight = state.fontSize * 1.4
-        let rampDistance = lineHeight * 2
-        let remaining = maxOffset - pos
-        if remaining >= rampDistance { return 1.0 }
-        let t = max(0, remaining / rampDistance)
-        // Smooth ease-out to gentle stop
-        return max(0.02, t * t * (3 - 2 * t))
-    }
+
 
     var body: some View {
         GeometryReader { geo in
@@ -102,10 +91,9 @@ struct TeleprompterScrollView: View {
             let baseSpeed = state.scrollEngine.speed
             let elapsed = Date().timeIntervalSince(startTime ?? Date())
 
-            // Time-based ramp at start, position-based slowdown at end
+            // Time-based ramp at start, hard stop at end
             let startMul = speedMultiplier(elapsed: elapsed)
-            let endMul = endSlowdown(at: offset)
-            offset += (baseSpeed * startMul * endMul) / 60.0
+            offset += (baseSpeed * startMul) / 60.0
 
             // Clamp to valid range
             offset = max(0, offset)
