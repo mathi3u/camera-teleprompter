@@ -38,7 +38,7 @@ struct TeleprompterScrollView: View {
                 .foregroundStyle(.white)
                 .multilineTextAlignment(.leading)
                 .frame(width: geo.size.width - 24, alignment: .leading)
-                .padding(.horizontal, 12)
+                .padding(12)
                 .padding(.bottom, viewportHeight * 0.4)
                 .fixedSize(horizontal: false, vertical: true)
                 .background(
@@ -62,19 +62,6 @@ struct TeleprompterScrollView: View {
                 }
         }
         .clipped()
-        .overlay(alignment: .top) {
-            LinearGradient(colors: [.black.opacity(0.70), .clear],
-                           startPoint: .top, endPoint: .bottom)
-                .frame(height: 12)
-                .allowsHitTesting(false)
-        }
-        .overlay(alignment: .bottom) {
-            LinearGradient(colors: [.clear, .black.opacity(0.70)],
-                           startPoint: .top, endPoint: .bottom)
-                .frame(height: 12)
-                .allowsHitTesting(false)
-        }
-        .background(Color.black.opacity(0.70))
     }
 
     private func startScrolling() {

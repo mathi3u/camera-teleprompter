@@ -15,7 +15,7 @@ struct MainWindowView: View {
             switch state.phase {
             case .idle:
                 TextEditor(text: $state.currentScript.body)
-                    .font(.system(size: state.fontSize, design: .monospaced))
+                    .font(.system(size: state.fontSize, weight: .regular, design: .monospaced))
                     .foregroundStyle(.white)
                     .scrollContentBackground(.hidden)
                     .padding(12)
