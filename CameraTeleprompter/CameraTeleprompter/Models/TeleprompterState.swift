@@ -1,0 +1,43 @@
+import SwiftUI
+
+enum DisplayMode: String, CaseIterable, Codable {
+    case notch = "Notch"
+    case floating = "Floating"
+}
+
+enum AppPhase {
+    case idle
+    case countdown(Int)
+    case running
+}
+
+@Observable
+final class TeleprompterState {
+    // MARK: - Script
+    var currentScript: Script = Script()
+    var scripts: [Script] = []
+
+    // MARK: - Appearance
+    var fontSize: CGFloat = 24
+    var textColor: Color = .white
+    var scrollSpeed: CGFloat = 60
+    var displayMode: DisplayMode = .notch
+
+    // MARK: - Audio
+    var voiceThreshold: Float = -30 // dB
+    var currentAudioLevel: Float = -160
+    var isSpeaking: Bool = false
+    var isVoiceControlEnabled: Bool = true
+
+    // MARK: - State
+    var phase: AppPhase = .idle
+    var isOverlayVisible: Bool = false
+
+    // MARK: - Engines
+    let scrollEngine = ScrollEngine()
+
+    var isRunning: Bool {
+        if case .running = phase { return true }
+        return false
+    }
+}

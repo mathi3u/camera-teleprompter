@@ -1,0 +1,584 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AA000001 /* CameraTeleprompterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000001; };
+		AA000002 /* TeleprompterState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000002; };
+		AA000003 /* Script.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000003; };
+		AA000004 /* ScrollEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000004; };
+		AA000005 /* AudioLevelMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000005; };
+		AA000006 /* NotchDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000006; };
+		AA000007 /* ScriptStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000007; };
+		AA000008 /* OverlayPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000008; };
+		AA000009 /* OverlayWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000009; };
+		AA000010 /* OverlayContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000010; };
+		AA000011 /* MenuBarContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000011; };
+		AA000012 /* ScriptEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000012; };
+		AA000013 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000013; };
+		AA000014 /* TeleprompterScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000014; };
+		AA000015 /* CountdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000015; };
+		AA000016 /* VoiceLevelIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000016; };
+		AA000017 /* NSScreen+Notch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000017; };
+		AA000018 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB000018; };
+		AA100001 /* ScrollEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB100001; };
+		AA100002 /* AudioLevelMonitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB100002; };
+		AA100003 /* ScriptStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB100003; };
+		AA100004 /* NotchDetectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB100004; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		AC000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AE000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AD000001;
+			remoteInfo = CameraTeleprompter;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		AB000001 /* CameraTeleprompterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraTeleprompterApp.swift; sourceTree = "<group>"; };
+		AB000002 /* TeleprompterState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeleprompterState.swift; sourceTree = "<group>"; };
+		AB000003 /* Script.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Script.swift; sourceTree = "<group>"; };
+		AB000004 /* ScrollEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollEngine.swift; sourceTree = "<group>"; };
+		AB000005 /* AudioLevelMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioLevelMonitor.swift; sourceTree = "<group>"; };
+		AB000006 /* NotchDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotchDetector.swift; sourceTree = "<group>"; };
+		AB000007 /* ScriptStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptStore.swift; sourceTree = "<group>"; };
+		AB000008 /* OverlayPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayPanel.swift; sourceTree = "<group>"; };
+		AB000009 /* OverlayWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindowController.swift; sourceTree = "<group>"; };
+		AB000010 /* OverlayContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayContentView.swift; sourceTree = "<group>"; };
+		AB000011 /* MenuBarContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarContentView.swift; sourceTree = "<group>"; };
+		AB000012 /* ScriptEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptEditorView.swift; sourceTree = "<group>"; };
+		AB000013 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		AB000014 /* TeleprompterScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeleprompterScrollView.swift; sourceTree = "<group>"; };
+		AB000015 /* CountdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownView.swift; sourceTree = "<group>"; };
+		AB000016 /* VoiceLevelIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceLevelIndicator.swift; sourceTree = "<group>"; };
+		AB000017 /* NSScreen+Notch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSScreen+Notch.swift"; sourceTree = "<group>"; };
+		AB000018 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AB000019 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AB000020 /* CameraTeleprompter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CameraTeleprompter.entitlements; sourceTree = "<group>"; };
+		AB100001 /* ScrollEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollEngineTests.swift; sourceTree = "<group>"; };
+		AB100002 /* AudioLevelMonitorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioLevelMonitorTests.swift; sourceTree = "<group>"; };
+		AB100003 /* ScriptStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptStoreTests.swift; sourceTree = "<group>"; };
+		AB100004 /* NotchDetectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotchDetectorTests.swift; sourceTree = "<group>"; };
+		AF000001 /* CameraTeleprompter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CameraTeleprompter.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AF000002 /* CameraTeleprompterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CameraTeleprompterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B0000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B0000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C0000001 /* Root */ = {
+			isa = PBXGroup;
+			children = (
+				C0000002 /* CameraTeleprompter */,
+				C0000010 /* CameraTeleprompterTests */,
+				C0000099 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C0000002 /* CameraTeleprompter */ = {
+			isa = PBXGroup;
+			children = (
+				C0000003 /* App */,
+				C0000004 /* Models */,
+				C0000005 /* Services */,
+				C0000006 /* Windows */,
+				C0000007 /* Views */,
+				C0000008 /* Extensions */,
+				C0000009 /* Resources */,
+				AB000020 /* CameraTeleprompter.entitlements */,
+			);
+			path = CameraTeleprompter;
+			sourceTree = "<group>";
+		};
+		C0000003 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				AB000001 /* CameraTeleprompterApp.swift */,
+				AB000019 /* Info.plist */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		C0000004 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AB000002 /* TeleprompterState.swift */,
+				AB000003 /* Script.swift */,
+				AB000004 /* ScrollEngine.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		C0000005 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				AB000005 /* AudioLevelMonitor.swift */,
+				AB000006 /* NotchDetector.swift */,
+				AB000007 /* ScriptStore.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		C0000006 /* Windows */ = {
+			isa = PBXGroup;
+			children = (
+				AB000008 /* OverlayPanel.swift */,
+				AB000009 /* OverlayWindowController.swift */,
+				AB000010 /* OverlayContentView.swift */,
+			);
+			path = Windows;
+			sourceTree = "<group>";
+		};
+		C0000007 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C0000011 /* MenuBarPopover */,
+				C0000012 /* Overlay */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		C0000008 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				AB000017 /* NSScreen+Notch.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		C0000009 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AB000018 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		C0000010 /* CameraTeleprompterTests */ = {
+			isa = PBXGroup;
+			children = (
+				AB100001 /* ScrollEngineTests.swift */,
+				AB100002 /* AudioLevelMonitorTests.swift */,
+				AB100003 /* ScriptStoreTests.swift */,
+				AB100004 /* NotchDetectorTests.swift */,
+			);
+			path = CameraTeleprompterTests;
+			sourceTree = "<group>";
+		};
+		C0000011 /* MenuBarPopover */ = {
+			isa = PBXGroup;
+			children = (
+				AB000011 /* MenuBarContentView.swift */,
+				AB000012 /* ScriptEditorView.swift */,
+				AB000013 /* SettingsView.swift */,
+			);
+			path = MenuBarPopover;
+			sourceTree = "<group>";
+		};
+		C0000012 /* Overlay */ = {
+			isa = PBXGroup;
+			children = (
+				AB000014 /* TeleprompterScrollView.swift */,
+				AB000015 /* CountdownView.swift */,
+				AB000016 /* VoiceLevelIndicator.swift */,
+			);
+			path = Overlay;
+			sourceTree = "<group>";
+		};
+		C0000099 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AF000001 /* CameraTeleprompter.app */,
+				AF000002 /* CameraTeleprompterTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AD000001 /* CameraTeleprompter */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D2000001 /* Build configuration list for PBXNativeTarget "CameraTeleprompter" */;
+			buildPhases = (
+				B1000001 /* Sources */,
+				B0000001 /* Frameworks */,
+				B2000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CameraTeleprompter;
+			productName = CameraTeleprompter;
+			productReference = AF000001 /* CameraTeleprompter.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AD000002 /* CameraTeleprompterTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D2000002 /* Build configuration list for PBXNativeTarget "CameraTeleprompterTests" */;
+			buildPhases = (
+				B1000002 /* Sources */,
+				B0000002 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AC000002 /* PBXTargetDependency */,
+			);
+			name = CameraTeleprompterTests;
+			productName = CameraTeleprompterTests;
+			productReference = AF000002 /* CameraTeleprompterTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AE000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					AD000001 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					AD000002 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = AD000001;
+					};
+				};
+			};
+			buildConfigurationList = D2000003 /* Build configuration list for PBXProject "CameraTeleprompter" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = C0000001 /* Root */;
+			productRefGroup = C0000099 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AD000001 /* CameraTeleprompter */,
+				AD000002 /* CameraTeleprompterTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B2000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000018 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B1000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000001 /* CameraTeleprompterApp.swift in Sources */,
+				AA000002 /* TeleprompterState.swift in Sources */,
+				AA000003 /* Script.swift in Sources */,
+				AA000004 /* ScrollEngine.swift in Sources */,
+				AA000005 /* AudioLevelMonitor.swift in Sources */,
+				AA000006 /* NotchDetector.swift in Sources */,
+				AA000007 /* ScriptStore.swift in Sources */,
+				AA000008 /* OverlayPanel.swift in Sources */,
+				AA000009 /* OverlayWindowController.swift in Sources */,
+				AA000010 /* OverlayContentView.swift in Sources */,
+				AA000011 /* MenuBarContentView.swift in Sources */,
+				AA000012 /* ScriptEditorView.swift in Sources */,
+				AA000013 /* SettingsView.swift in Sources */,
+				AA000014 /* TeleprompterScrollView.swift in Sources */,
+				AA000015 /* CountdownView.swift in Sources */,
+				AA000016 /* VoiceLevelIndicator.swift in Sources */,
+				AA000017 /* NSScreen+Notch.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B1000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA100001 /* ScrollEngineTests.swift in Sources */,
+				AA100002 /* AudioLevelMonitorTests.swift in Sources */,
+				AA100003 /* ScriptStoreTests.swift in Sources */,
+				AA100004 /* NotchDetectorTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AC000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AD000001 /* CameraTeleprompter */;
+			targetProxy = AC000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		D0000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		D0000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		D1000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CameraTeleprompter/CameraTeleprompter.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CameraTeleprompter/App/Info.plist;
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Camera Teleprompter uses the microphone to detect when you are speaking so it can automatically scroll your script.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.camerateleprompter.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		D1000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CameraTeleprompter/CameraTeleprompter.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CameraTeleprompter/App/Info.plist;
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Camera Teleprompter uses the microphone to detect when you are speaking so it can automatically scroll your script.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.camerateleprompter.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		D1000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.camerateleprompter.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CameraTeleprompter.app/Contents/MacOS/CameraTeleprompter";
+			};
+			name = Debug;
+		};
+		D1000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.camerateleprompter.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CameraTeleprompter.app/Contents/MacOS/CameraTeleprompter";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D2000001 /* Build configuration list for PBXNativeTarget "CameraTeleprompter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D1000001 /* Debug */,
+				D1000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D2000002 /* Build configuration list for PBXNativeTarget "CameraTeleprompterTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D1000003 /* Debug */,
+				D1000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D2000003 /* Build configuration list for PBXProject "CameraTeleprompter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D0000001 /* Debug */,
+				D0000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+	};
+	rootObject = AE000001 /* Project object */;
+}
