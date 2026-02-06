@@ -14,15 +14,12 @@ struct MainWindowView: View {
 
             switch state.phase {
             case .idle:
-                VStack(spacing: 0) {
-                    TextEditor(text: $state.currentScript.body)
-                        .font(.system(size: state.fontSize, design: .monospaced))
-                        .foregroundStyle(.white)
-                        .scrollContentBackground(.hidden)
-                        .padding(12)
-
-                    HStack {
-                        Spacer()
+                TextEditor(text: $state.currentScript.body)
+                    .font(.system(size: state.fontSize, design: .monospaced))
+                    .foregroundStyle(.white)
+                    .scrollContentBackground(.hidden)
+                    .padding(12)
+                    .overlay(alignment: .bottomTrailing) {
                         Button {
                             onStart()
                         } label: {
@@ -38,7 +35,6 @@ struct MainWindowView: View {
                         .padding(.trailing, 12)
                         .padding(.bottom, 8)
                     }
-                }
             case .countdown(let count):
                 CountdownView(count: count)
             case .running:

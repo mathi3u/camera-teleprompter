@@ -8,38 +8,35 @@ struct TeleprompterScrollView: View {
     @State private var viewportHeight: CGFloat = 0
     @State private var timer: Timer?
     @State private var scrollMonitor: Any?
+    @State private var startTime: Date?
 
     /// Maximum scroll offset - last line stays at bottom of viewport
     private var maxOffset: CGFloat {
         max(0, textHeight - viewportHeight)
     }
 
-    /// Distance over which speed ramps up/down (half a viewport)
-    private var rampDistance: CGFloat {
-        max(state.fontSize * 1.4 * 3, viewportHeight * 0.5)
+    /// Time-based speed multiplier: 1s pause, then ease to full speed over 2s
+    private func speedMultiplier(elapsed: TimeInterval) -> CGFloat {
+        let pause = 1.0
+        let rampDuration = 2.0
+
+        // First second: no movement
+        guard elapsed > pause else { return 0 }
+
+        // Next 2 seconds: ease from 0 to 1
+        let t = min(1.0, (elapsed - pause) / rampDuration)
+        // Smooth ease-in curve
+        return CGFloat(t * t * (3 - 2 * t))
     }
 
-    /// Smoothstep: S-curve from 0 to 1
-    private func smoothstep(_ t: CGFloat) -> CGFloat {
-        let c = max(0, min(1, t))
-        return c * c * (3 - 2 * c)
-    }
-
-    /// Speed multiplier based on position: ease-in at start, ease-out at end
-    private func speedMultiplier(at pos: CGFloat) -> CGFloat {
+    /// Position-based slowdown near the end
+    private func endSlowdown(at pos: CGFloat) -> CGFloat {
         guard maxOffset > 0 else { return 1.0 }
-
-        // Ease-in: ramp up from start
-        let startT = smoothstep(pos / rampDistance)
-
-        // Ease-out: ramp down near end
-        let endT = smoothstep((maxOffset - pos) / rampDistance)
-
-        // Take the minimum (near start or near end, whichever is closer)
-        let multiplier = min(startT, endT)
-
-        // Never fully stop - minimum 5% speed so it always feels alive
-        return max(0.05, multiplier)
+        let rampDistance = max(state.fontSize * 1.4 * 5, viewportHeight * 0.5)
+        let remaining = maxOffset - pos
+        if remaining >= rampDistance { return 1.0 }
+        let t = max(0, remaining / rampDistance)
+        return max(0.05, t * t * (3 - 2 * t))
     }
 
     var body: some View {
@@ -88,6 +85,7 @@ struct TeleprompterScrollView: View {
     }
 
     private func startScrolling() {
+        startTime = Date()
         timer = Timer.scheduledTimer(withTimeInterval: 1.0 / 60.0, repeats: true) { _ in
             guard state.scrollEngine.isScrolling, !state.scrollEngine.isPaused else { return }
 
@@ -98,10 +96,13 @@ struct TeleprompterScrollView: View {
                 state.scrollNudge = 0
             }
 
-            // Apply eased speed: slow start, cruise, slow stop
             let baseSpeed = state.scrollEngine.speed
-            let multiplier = speedMultiplier(at: offset)
-            offset += (baseSpeed * multiplier) / 60.0
+            let elapsed = Date().timeIntervalSince(startTime ?? Date())
+
+            // Time-based ramp at start, position-based slowdown at end
+            let startMul = speedMultiplier(elapsed: elapsed)
+            let endMul = endSlowdown(at: offset)
+            offset += (baseSpeed * startMul * endMul) / 60.0
 
             // Clamp to valid range
             offset = max(0, offset)
