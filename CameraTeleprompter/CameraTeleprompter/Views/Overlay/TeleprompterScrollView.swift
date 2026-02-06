@@ -13,10 +13,9 @@ struct TeleprompterScrollView: View {
             Text(state.currentScript.body)
                 .font(.system(size: state.fontSize, weight: .regular, design: .monospaced))
                 .foregroundStyle(.white)
-                .multilineTextAlignment(.center)
-                .lineSpacing(6)
-                .frame(width: geo.size.width - 48)
-                .padding(.horizontal, 24)
+                .multilineTextAlignment(.leading)
+                .frame(width: geo.size.width - 24, alignment: .leading)
+                .padding(.horizontal, 12)
                 .fixedSize(horizontal: false, vertical: true)
                 .background(
                     GeometryReader { textGeo in
