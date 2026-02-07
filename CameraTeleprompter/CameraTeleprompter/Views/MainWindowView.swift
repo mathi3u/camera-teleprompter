@@ -1,7 +1,27 @@
 import SwiftUI
 
+/// Helper to bridge SwiftUI openSettings action to NSMenuItem targets
+final class MenuActionHelper: NSObject {
+    static let shared = MenuActionHelper()
+    var openSettingsAction: (() -> Void)?
+
+    @objc func openPreferences() {
+        openSettingsAction?()
+        // Ensure the settings window appears above the floating main window
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            for window in NSApp.windows where window != NSApp.windows.first {
+                if window.isVisible {
+                    window.level = .floating
+                    window.makeKeyAndOrderFront(nil)
+                }
+            }
+        }
+    }
+}
+
 struct MainWindowView: View {
     @Environment(TeleprompterState.self) private var state
+    @Environment(\.openSettings) private var openSettings
     @State private var rightClickMonitor: Any?
 
     var onStart: () -> Void
@@ -43,13 +63,17 @@ struct MainWindowView: View {
                     .environment(state)
             }
         }
-        .onAppear { installRightClickMonitor() }
+        .onAppear {
+            MenuActionHelper.shared.openSettingsAction = { openSettings() }
+            installRightClickMonitor()
+        }
         .onDisappear { removeRightClickMonitor() }
     }
 
     private func installRightClickMonitor() {
         rightClickMonitor = NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown) { event in
             let menu = NSMenu()
+            let helper = MenuActionHelper.shared
 
             if case .idle = state.phase {
                 menu.addItem(NSMenuItem(title: "Cut", action: #selector(NSText.cut(_:)), keyEquivalent: ""))
@@ -59,7 +83,9 @@ struct MainWindowView: View {
                 menu.addItem(NSMenuItem.separator())
             }
 
-            menu.addItem(NSMenuItem(title: "Preferences...", action: Selector(("showSettingsWindow:")), keyEquivalent: ","))
+            let prefsItem = NSMenuItem(title: "Preferences...", action: #selector(MenuActionHelper.openPreferences), keyEquivalent: ",")
+            prefsItem.target = helper
+            menu.addItem(prefsItem)
             menu.addItem(NSMenuItem.separator())
             menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
 
