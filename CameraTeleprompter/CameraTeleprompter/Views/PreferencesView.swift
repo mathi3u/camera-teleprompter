@@ -36,6 +36,6 @@ struct PreferencesView: View {
             }
         }
         .formStyle(.grouped)
-        .frame(width: 350, height: 200)
+        .frame(width: 350, height: 240)
     }
 }

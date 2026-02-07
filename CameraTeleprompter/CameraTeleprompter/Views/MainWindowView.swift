@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MainWindowView: View {
     @Environment(TeleprompterState.self) private var state
+    @State private var rightClickMonitor: Any?
 
     var onStart: () -> Void
     var onStop: () -> Void
@@ -42,14 +43,37 @@ struct MainWindowView: View {
                     .environment(state)
             }
         }
-        .contextMenu {
-            Button("Preferences...") {
-                NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+        .onAppear { installRightClickMonitor() }
+        .onDisappear { removeRightClickMonitor() }
+    }
+
+    private func installRightClickMonitor() {
+        rightClickMonitor = NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown) { event in
+            let menu = NSMenu()
+
+            if case .idle = state.phase {
+                menu.addItem(NSMenuItem(title: "Cut", action: #selector(NSText.cut(_:)), keyEquivalent: ""))
+                menu.addItem(NSMenuItem(title: "Copy", action: #selector(NSText.copy(_:)), keyEquivalent: ""))
+                menu.addItem(NSMenuItem(title: "Paste", action: #selector(NSText.paste(_:)), keyEquivalent: ""))
+                menu.addItem(NSMenuItem(title: "Select All", action: #selector(NSText.selectAll(_:)), keyEquivalent: ""))
+                menu.addItem(NSMenuItem.separator())
             }
-            Divider()
-            Button("Quit") {
-                NSApplication.shared.terminate(nil)
+
+            menu.addItem(NSMenuItem(title: "Preferences...", action: Selector(("showSettingsWindow:")), keyEquivalent: ","))
+            menu.addItem(NSMenuItem.separator())
+            menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+
+            if let contentView = event.window?.contentView {
+                NSMenu.popUpContextMenu(menu, with: event, for: contentView)
             }
+            return nil
+        }
+    }
+
+    private func removeRightClickMonitor() {
+        if let monitor = rightClickMonitor {
+            NSEvent.removeMonitor(monitor)
+            rightClickMonitor = nil
         }
     }
 }
