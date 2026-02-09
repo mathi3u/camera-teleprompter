@@ -23,6 +23,7 @@ struct MainWindowView: View {
     @Environment(TeleprompterState.self) private var state
     @Environment(\.openSettings) private var openSettings
     @State private var rightClickMonitor: Any?
+    @State private var keyboardMonitor: Any?
 
     var onStart: () -> Void
     var onStop: () -> Void
@@ -30,44 +31,57 @@ struct MainWindowView: View {
     var body: some View {
         @Bindable var state = state
 
-        ZStack {
-            Color.black.opacity(state.windowOpacity).ignoresSafeArea()
+        VStack(spacing: 0) {
+            ZStack {
+                Color.black.opacity(state.windowOpacity).ignoresSafeArea()
 
-            switch state.phase {
-            case .idle:
-                TextEditor(text: $state.currentScript.body)
-                    .font(.system(size: state.fontSize, weight: .regular, design: .monospaced))
-                    .foregroundStyle(.white)
-                    .scrollContentBackground(.hidden)
-                    .padding(12)
-                    .overlay(alignment: .bottomTrailing) {
-                        Button {
-                            onStart()
-                        } label: {
-                            Image(systemName: "play.fill")
-                                .font(.system(size: 12))
-                                .foregroundStyle(.white.opacity(0.5))
-                                .frame(width: 28, height: 28)
-                                .background(Color.white.opacity(0.08))
-                                .clipShape(Circle())
+                switch state.phase {
+                case .idle:
+                    TextEditor(text: $state.currentScript.body)
+                        .font(.system(size: state.fontSize, weight: .regular, design: .monospaced))
+                        .foregroundStyle(.white)
+                        .scrollContentBackground(.hidden)
+                        .padding(12)
+                        .overlay(alignment: .bottomTrailing) {
+                            Button {
+                                onStart()
+                            } label: {
+                                Image(systemName: "play.fill")
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(.white.opacity(0.5))
+                                    .frame(width: 28, height: 28)
+                                    .background(Color.white.opacity(0.08))
+                                    .clipShape(Circle())
+                            }
+                            .buttonStyle(.plain)
+                            .disabled(state.currentScript.body.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                            .padding(.trailing, 12)
+                            .padding(.bottom, 8)
                         }
-                        .buttonStyle(.plain)
-                        .disabled(state.currentScript.body.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                        .padding(.trailing, 12)
-                        .padding(.bottom, 8)
-                    }
-            case .countdown(let count):
-                CountdownView(count: count)
-            case .running:
-                TeleprompterScrollView()
-                    .environment(state)
+                case .countdown(let count):
+                    CountdownView(count: count)
+                case .running:
+                    TeleprompterScrollView()
+                        .environment(state)
+                }
             }
+
+            Text("\u{2318}\u{23CE}: play  |  Space: pause  |  \u{2190}\u{2192}: speed  |  \u{2191}\u{2193}: skip  |  +/-: font  |  Esc: stop")
+                .font(.system(size: 10))
+                .foregroundStyle(.white.opacity(0.3))
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 4)
+                .background(Color.black.opacity(state.windowOpacity))
         }
         .onAppear {
             MenuActionHelper.shared.openSettingsAction = { openSettings() }
             installRightClickMonitor()
+            installKeyboardMonitor()
         }
-        .onDisappear { removeRightClickMonitor() }
+        .onDisappear {
+            removeRightClickMonitor()
+            removeKeyboardMonitor()
+        }
     }
 
     private func installRightClickMonitor() {
@@ -93,6 +107,33 @@ struct MainWindowView: View {
                 NSMenu.popUpContextMenu(menu, with: event, for: contentView)
             }
             return nil
+        }
+    }
+
+    private func installKeyboardMonitor() {
+        keyboardMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
+            let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+            // Cmd+, opens Preferences
+            if flags.contains(.command) && event.keyCode == 43 {
+                MenuActionHelper.shared.openPreferences()
+                return nil
+            }
+            // Cmd+Enter starts playback (only in idle mode with non-empty script)
+            if flags.contains(.command) && event.keyCode == 36 {
+                if case .idle = state.phase,
+                   !state.currentScript.body.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    onStart()
+                    return nil
+                }
+            }
+            return event
+        }
+    }
+
+    private func removeKeyboardMonitor() {
+        if let monitor = keyboardMonitor {
+            NSEvent.removeMonitor(monitor)
+            keyboardMonitor = nil
         }
     }
 
