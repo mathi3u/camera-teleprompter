@@ -37,11 +37,49 @@ struct MainWindowView: View {
 
                 switch state.phase {
                 case .idle:
-                    TextEditor(text: $state.currentScript.body)
-                        .font(.system(size: state.fontSize, weight: .regular, design: .monospaced))
-                        .foregroundStyle(.white)
-                        .scrollContentBackground(.hidden)
-                        .padding(12)
+                    if state.isCoachingEnabled && state.speechMode == .freeForm {
+                        // Free-form mode: no script editor, just a start prompt
+                        VStack(spacing: 12) {
+                            if state.isCoachingEnabled {
+                                Picker("", selection: $state.speechMode) {
+                                    Text("Script").tag(SpeechMode.teleprompter)
+                                    Text("Free").tag(SpeechMode.freeForm)
+                                }
+                                .pickerStyle(.segmented)
+                                .frame(width: 160)
+                            }
+                            Text("Press play to start")
+                                .font(.system(size: 16))
+                                .foregroundStyle(.white.opacity(0.4))
+                            Button {
+                                onStart()
+                            } label: {
+                                Image(systemName: "play.fill")
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(.white.opacity(0.5))
+                                    .frame(width: 28, height: 28)
+                                    .background(Color.white.opacity(0.08))
+                                    .clipShape(Circle())
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    } else {
+                        VStack(spacing: 0) {
+                            if state.isCoachingEnabled {
+                                Picker("", selection: $state.speechMode) {
+                                    Text("Script").tag(SpeechMode.teleprompter)
+                                    Text("Free").tag(SpeechMode.freeForm)
+                                }
+                                .pickerStyle(.segmented)
+                                .frame(width: 160)
+                                .padding(.top, 8)
+                            }
+                            TextEditor(text: $state.currentScript.body)
+                                .font(.system(size: state.fontSize, weight: .regular, design: .monospaced))
+                                .foregroundStyle(.white)
+                                .scrollContentBackground(.hidden)
+                                .padding(12)
+                        }
                         .overlay(alignment: .bottomTrailing) {
                             Button {
                                 onStart()
@@ -58,6 +96,7 @@ struct MainWindowView: View {
                             .padding(.trailing, 12)
                             .padding(.bottom, 8)
                         }
+                    }
                 case .countdown(let count):
                     CountdownView(count: count)
                 case .running:
@@ -118,12 +157,19 @@ struct MainWindowView: View {
                 MenuActionHelper.shared.openPreferences()
                 return nil
             }
-            // Cmd+Enter starts playback (only in idle mode with non-empty script)
+            // Cmd+Enter starts playback
             if flags.contains(.command) && event.keyCode == 36 {
-                if case .idle = state.phase,
-                   !state.currentScript.body.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    onStart()
-                    return nil
+                if case .idle = state.phase {
+                    // In freeForm mode, no script needed
+                    if state.speechMode == .freeForm && state.isCoachingEnabled {
+                        onStart()
+                        return nil
+                    }
+                    // In teleprompter mode, require script
+                    if !state.currentScript.body.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        onStart()
+                        return nil
+                    }
                 }
             }
             return event

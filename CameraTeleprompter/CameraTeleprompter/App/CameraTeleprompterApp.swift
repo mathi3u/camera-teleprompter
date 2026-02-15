@@ -3,8 +3,18 @@ import SwiftUI
 @main
 struct CameraTeleprompterApp: App {
     @State private var state = TeleprompterState()
+    @State private var coachingState = CoachingState()
     @State private var keyMonitor: Any?
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
+    // Coaching services
+    @State private var speechAnalyzer = SpeechAnalyzer()
+    @State private var speechTranscriber = SpeechTranscriber()
+    @State private var pitchTracker = RealTimePitchTracker()
+    @State private var audioPipeline = AudioPipelineController()
+    @State private var faceLightController = FaceLightWindowController()
+    @State private var coachingStartTime: Date?
+    @State private var speechAuthRequested = false
 
     var body: some Scene {
         WindowGroup {
@@ -13,6 +23,7 @@ struct CameraTeleprompterApp: App {
                 onStop: stopTeleprompter
             )
             .environment(state)
+            .environment(coachingState)
         }
         .windowStyle(.hiddenTitleBar)
         .defaultSize(width: 500, height: 220)
@@ -21,20 +32,92 @@ struct CameraTeleprompterApp: App {
         Settings {
             PreferencesView()
                 .environment(state)
+                .environment(coachingState)
         }
     }
 
     private func startTeleprompter() {
         state.scrollEngine.speed = state.scrollSpeed
         state.phase = .running
-        state.scrollEngine.start()
+        if state.speechMode == .teleprompter {
+            state.scrollEngine.start()
+        }
         installKeyMonitor()
+
+        if state.isCoachingEnabled {
+            startCoaching()
+        }
+
+        if state.isFaceLightEnabled {
+            faceLightController.show(brightness: state.faceLightBrightness)
+        }
     }
 
     private func stopTeleprompter() {
         state.scrollEngine.stop()
         state.phase = .idle
         removeKeyMonitor()
+        stopCoaching()
+        faceLightController.close()
+    }
+
+    private func startCoaching() {
+        coachingState.reset()
+        coachingStartTime = Date()
+        state.liveTranscript = ""
+
+        // Request speech authorization if needed
+        if !speechAuthRequested {
+            speechAuthRequested = true
+            SpeechTranscriber.requestAuthorization { _ in }
+        }
+
+        // Set up transcriber callbacks
+        speechTranscriber.onPartialTranscript = { [self] transcript in
+            state.liveTranscript = transcript
+            let events = speechAnalyzer.processPartialTranscript(transcript)
+            for event in events {
+                coachingState.addEvent(event)
+                if case .fillerWord = event.type {
+                    coachingState.fillerCount += 1
+                }
+                if case .hedging = event.type {
+                    coachingState.hedgingCount += 1
+                }
+            }
+
+            // Update rates based on elapsed time
+            if let start = coachingStartTime {
+                let minutes = Date().timeIntervalSince(start) / 60
+                if minutes > 0.1 {
+                    let wordCount = transcript.split(separator: " ").count
+                    let wpm = Int(Double(wordCount) / minutes)
+                    coachingState.applyPace(wpm: wpm)
+                    coachingState.applyFillerRate(Double(coachingState.fillerCount) / minutes)
+                    coachingState.applyHedgingRate(Double(coachingState.hedgingCount) / minutes)
+                }
+            }
+        }
+
+        // Configure audio pipeline
+        let levelMonitor = AudioLevelMonitor()
+        levelMonitor.threshold = state.voiceThreshold
+        audioPipeline.configure(
+            levelMonitor: levelMonitor,
+            transcriber: speechTranscriber,
+            pitchTracker: pitchTracker
+        )
+
+        speechTranscriber.start()
+        audioPipeline.start()
+    }
+
+    private func stopCoaching() {
+        audioPipeline.stop()
+        speechTranscriber.stop()
+        speechAnalyzer.reset()
+        pitchTracker.reset()
+        coachingStartTime = nil
     }
 
     private func installKeyMonitor() {

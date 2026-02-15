@@ -30,6 +30,13 @@ final class TeleprompterState {
     var isSpeaking: Bool = false
     var isVoiceControlEnabled: Bool = false
 
+    // MARK: - Coaching
+    var speechMode: SpeechMode = .teleprompter
+    var isCoachingEnabled: Bool = false
+    var liveTranscript: String = ""
+    var isFaceLightEnabled: Bool = false
+    var faceLightBrightness: CGFloat = 0.8
+
     // MARK: - State
     var phase: AppPhase = .idle
     var isOverlayVisible: Bool = false

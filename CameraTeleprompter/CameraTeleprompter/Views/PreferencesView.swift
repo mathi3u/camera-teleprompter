@@ -34,8 +34,33 @@ struct PreferencesView: View {
                         .frame(width: 40, alignment: .trailing)
                 }
             }
+            Section("Coaching") {
+                Toggle("Enable Coaching", isOn: $state.isCoachingEnabled)
+
+                if state.isCoachingEnabled {
+                    Picker("Mode", selection: $state.speechMode) {
+                        Text("Script").tag(SpeechMode.teleprompter)
+                        Text("Free").tag(SpeechMode.freeForm)
+                    }
+                    .pickerStyle(.segmented)
+                }
+            }
+
+            Section("Face Light") {
+                Toggle("Enable Face Light", isOn: $state.isFaceLightEnabled)
+
+                if state.isFaceLightEnabled {
+                    HStack {
+                        Text("Brightness")
+                        Slider(value: $state.faceLightBrightness, in: 0.3...1.0, step: 0.05)
+                        Text("\(Int(state.faceLightBrightness * 100))%")
+                            .monospacedDigit()
+                            .frame(width: 40, alignment: .trailing)
+                    }
+                }
+            }
         }
         .formStyle(.grouped)
-        .frame(width: 350, height: 280)
+        .frame(width: 350, height: 420)
     }
 }

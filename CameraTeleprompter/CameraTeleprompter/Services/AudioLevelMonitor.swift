@@ -30,6 +30,12 @@ final class AudioLevelMonitor {
         return 20 * log10(rms)
     }
 
+    /// Accept externally-computed dB level (used by AudioPipelineController)
+    func processLevel(db: Float) {
+        currentLevel = db
+        updateSpeakingState(db: db)
+    }
+
     func start() {
         guard !isMonitoring else { return }
 

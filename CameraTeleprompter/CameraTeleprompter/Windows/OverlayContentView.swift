@@ -2,6 +2,7 @@ import SwiftUI
 
 struct OverlayContentView: View {
     @Environment(TeleprompterState.self) private var state
+    @Environment(CoachingState.self) private var coachingState
 
     var body: some View {
         ZStack {
@@ -14,7 +15,11 @@ struct OverlayContentView: View {
                 CountdownView(count: count)
             case .running:
                 VStack(spacing: 0) {
-                    TeleprompterScrollView()
+                    if state.speechMode == .freeForm && state.isCoachingEnabled {
+                        FreeFormView()
+                    } else {
+                        TeleprompterScrollView()
+                    }
                     if state.isVoiceControlEnabled {
                         VoiceLevelIndicator()
                             .frame(height: 4)
@@ -22,6 +27,14 @@ struct OverlayContentView: View {
                             .padding(.bottom, 4)
                     }
                 }
+            }
+
+            // Coaching overlays (layered on top when running + coaching enabled)
+            if state.isCoachingEnabled, case .running = state.phase {
+                BorderGlowView()
+                    .allowsHitTesting(false)
+                FloatingMessageOverlay()
+                    .allowsHitTesting(false)
             }
         }
     }
