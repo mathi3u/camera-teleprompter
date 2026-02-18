@@ -19,6 +19,9 @@ final class CoachingState {
     /// Flash severity for reactive glow color changes (set on events, auto-clears)
     var flashSeverity: CoachingEventSeverity? = nil
 
+    /// Debug status (temporary)
+    var debugStatus: String = ""
+
     // Deduction tracking
     private(set) var fillerDeduction: Int = 0
     private(set) var hedgingDeduction: Int = 0

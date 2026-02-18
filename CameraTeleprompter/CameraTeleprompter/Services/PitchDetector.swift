@@ -79,6 +79,19 @@ final class RealTimePitchTracker {
     private var recentPitches: [Float] = []
     private static let windowSize = 10 // frames to analyze for uptalk
 
+    /// Running average pitch (0 if not enough data)
+    var averagePitch: Float {
+        guard recentPitches.count >= 10 else { return 0 }
+        return recentPitches.reduce(0, +) / Float(recentPitches.count)
+    }
+
+    /// True if current pitch is significantly above the speaker's baseline
+    var isPitchHigh: Bool {
+        let avg = averagePitch
+        guard avg > 0, currentPitch > 0 else { return false }
+        return currentPitch > avg * 1.3
+    }
+
     func addPitch(_ pitch: Float) {
         guard pitch > 0 else { return }
         currentPitch = pitch

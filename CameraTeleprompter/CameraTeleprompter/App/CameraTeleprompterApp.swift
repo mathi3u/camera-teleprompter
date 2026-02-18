@@ -14,7 +14,7 @@ struct CameraTeleprompterApp: App {
     @State private var audioPipeline = AudioPipelineController()
     @State private var edgeLightController = EdgeLightController()
     @State private var coachingStartTime: Date?
-    @State private var speechAuthRequested = false
+    @State private var lastPitchWarning: Date = .distantPast
 
     var body: some Scene {
         WindowGroup {
@@ -33,8 +33,7 @@ struct CameraTeleprompterApp: App {
             }
         }
         .windowStyle(.hiddenTitleBar)
-        .defaultSize(width: 500, height: 220)
-        .defaultPosition(.top)
+        .defaultSize(width: 500, height: 260)
 
         Settings {
             PreferencesView()
@@ -56,7 +55,7 @@ struct CameraTeleprompterApp: App {
         installKeyMonitor()
 
         if state.isCoachingEnabled {
-            startCoaching()
+            ensureSpeechAuthThenStartCoaching()
         }
 
     }
@@ -68,16 +67,43 @@ struct CameraTeleprompterApp: App {
         stopCoaching()
     }
 
+    private func ensureSpeechAuthThenStartCoaching() {
+        let status = SpeechTranscriber.authorizationStatus
+        switch status {
+        case .authorized:
+            startCoaching()
+        case .notDetermined:
+            SpeechTranscriber.requestAuthorization { newStatus in
+                DispatchQueue.main.async {
+                    if newStatus == .authorized {
+                        self.startCoaching()
+                    } else {
+                        self.showSpeechAuthAlert()
+                    }
+                }
+            }
+        default:
+            showSpeechAuthAlert()
+        }
+    }
+
+    private func showSpeechAuthAlert() {
+        let alert = NSAlert()
+        alert.messageText = "Speech Recognition Required"
+        alert.informativeText = "Enable Speech Recognition for Toner in System Settings → Privacy & Security → Speech Recognition."
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: "Open Settings")
+        alert.addButton(withTitle: "Skip")
+        let response = alert.runModal()
+        if response == .alertFirstButtonReturn {
+            NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_SpeechRecognition")!)
+        }
+    }
+
     private func startCoaching() {
         coachingState.reset()
         coachingStartTime = Date()
         state.liveTranscript = ""
-
-        // Request speech authorization if needed
-        if !speechAuthRequested {
-            speechAuthRequested = true
-            SpeechTranscriber.requestAuthorization { _ in }
-        }
 
         // Set up transcriber callbacks
         speechTranscriber.onPartialTranscript = { [self] transcript in
@@ -116,9 +142,23 @@ struct CameraTeleprompterApp: App {
                 if minutes > 0.1 {
                     let wordCount = transcript.split(separator: " ").count
                     let wpm = Int(Double(wordCount) / minutes)
+                    let prevWpm = coachingState.wpm
                     coachingState.applyPace(wpm: wpm)
                     coachingState.applyFillerRate(Double(coachingState.fillerCount) / minutes)
                     coachingState.applyHedgingRate(Double(coachingState.hedgingCount) / minutes)
+
+                    // Alert on pace changes (with threshold to avoid spam)
+                    if wpm > 180 && prevWpm <= 180 {
+                        let event = CoachingEvent(type: .paceTooFast, message: "Slow down", severity: .warning)
+                        coachingState.addEvent(event)
+                        coachingState.flashSeverity = .warning
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                            coachingState.flashSeverity = nil
+                        }
+                    } else if wpm < 100 && prevWpm >= 100 {
+                        let event = CoachingEvent(type: .paceTooSlow, message: "Pick up pace", severity: .info)
+                        coachingState.addEvent(event)
+                    }
                 }
             }
         }
@@ -132,14 +172,34 @@ struct CameraTeleprompterApp: App {
             pitchTracker: pitchTracker,
             onPitch: { [self] pitch in
                 coachingState.currentPitch = pitch
+                // Flag high pitch with 5s cooldown
+                if pitchTracker.isPitchHigh,
+                   Date().timeIntervalSince(lastPitchWarning) > 5 {
+                    lastPitchWarning = Date()
+                    let event = CoachingEvent(
+                        type: .pitchTooHigh,
+                        message: "Pitch high",
+                        severity: .warning
+                    )
+                    coachingState.addEvent(event)
+                    coachingState.flashSeverity = .warning
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                        coachingState.flashSeverity = nil
+                    }
+                }
             },
             onLevel: { [self] db in
                 coachingState.updateAudioLevel(db: db)
             }
         )
 
+        speechTranscriber.onError = { [self] error in
+            coachingState.debugStatus = "ERR: \(error.localizedDescription)"
+        }
+
         speechTranscriber.start()
         audioPipeline.start()
+        coachingState.debugStatus = ""
     }
 
     private func stopCoaching() {
@@ -202,22 +262,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
             let screenFrame = screen.frame
             let windowWidth: CGFloat = 500
-            let windowHeight: CGFloat = 220
+            let windowHeight: CGFloat = 260
             let x = screenFrame.midX - windowWidth / 2
             let y = screenFrame.maxY - windowHeight
 
+            // Auto-hide menu bar so window can touch the very top
+            NSApp.presentationOptions = [.autoHideMenuBar]
+
+            window.styleMask = [.borderless]
+            window.collectionBehavior = [.canJoinAllSpaces, .stationary]
             window.setFrame(NSRect(x: x, y: y, width: windowWidth, height: windowHeight), display: true)
             window.level = .statusBar
             window.isOpaque = false
             window.backgroundColor = .clear
             window.hasShadow = false
-            window.titlebarAppearsTransparent = true
-            window.titleVisibility = .hidden
-
-            // Hide traffic light buttons
-            window.standardWindowButton(.closeButton)?.isHidden = true
-            window.standardWindowButton(.miniaturizeButton)?.isHidden = true
-            window.standardWindowButton(.zoomButton)?.isHidden = true
 
             // Make sure window can receive key events
             window.makeKey()

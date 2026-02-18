@@ -556,16 +556,17 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CameraTeleprompter/App/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Toner;
 				INFOPLIST_KEY_LSUIElement = NO;
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Camera Teleprompter uses the microphone to detect when you are speaking so it can automatically scroll your script.";
-				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Camera Teleprompter uses speech recognition to provide real-time coaching feedback on your speaking.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Toner uses the microphone to detect when you are speaking so it can provide real-time coaching feedback.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Toner uses speech recognition to provide real-time coaching feedback on your speaking.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.camerateleprompter.app;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Toner;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -582,16 +583,17 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CameraTeleprompter/App/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Toner;
 				INFOPLIST_KEY_LSUIElement = NO;
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Camera Teleprompter uses the microphone to detect when you are speaking so it can automatically scroll your script.";
-				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Camera Teleprompter uses speech recognition to provide real-time coaching feedback on your speaking.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Toner uses the microphone to detect when you are speaking so it can provide real-time coaching feedback.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Toner uses speech recognition to provide real-time coaching feedback on your speaking.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.camerateleprompter.app;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Toner;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -606,7 +608,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.camerateleprompter.tests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Toner;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CameraTeleprompter.app/Contents/MacOS/CameraTeleprompter";
@@ -622,7 +624,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.camerateleprompter.tests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Toner;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CameraTeleprompter.app/Contents/MacOS/CameraTeleprompter";

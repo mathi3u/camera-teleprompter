@@ -14,6 +14,7 @@ enum CoachingEventType {
     case paceTooFast
     case paceTooSlow
     case uptalk
+    case pitchTooHigh
     case goodStreak
 }
 

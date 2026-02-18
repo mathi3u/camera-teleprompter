@@ -125,16 +125,10 @@ struct MainWindowView: View {
                         .allowsHitTesting(false)
                 }
             }
+            .frame(height: 180)
             .clipShape(UnevenRoundedRectangle(topLeadingRadius: 0, bottomLeadingRadius: 10, bottomTrailingRadius: 10, topTrailingRadius: 0))
 
-            // Live transcript — fading words below the window
-            if state.isCoachingEnabled, case .running = state.phase {
-                LiveTranscriptView(transcript: state.liveTranscript)
-                    .padding(.horizontal, 8)
-                    .padding(.top, 4)
-            }
-
-            // Floating toolbar — transparent area below window content
+            // Floating toolbar — two separate circle icons
             HStack(spacing: 8) {
                 Spacer()
 
@@ -143,9 +137,9 @@ struct MainWindowView: View {
                 } label: {
                     Image(systemName: "lightbulb.fill")
                         .font(.system(size: 11))
-                        .foregroundStyle(state.isEdgeLightEnabled ? .yellow : .white.opacity(0.5))
-                        .frame(width: 24, height: 24)
-                        .background(Color.white.opacity(state.isEdgeLightEnabled ? 0.15 : 0.08))
+                        .foregroundStyle(state.isEdgeLightEnabled ? .yellow : .white.opacity(0.6))
+                        .frame(width: 26, height: 26)
+                        .background(Color.black.opacity(0.6))
                         .clipShape(Circle())
                 }
                 .buttonStyle(.plain)
@@ -160,17 +154,23 @@ struct MainWindowView: View {
                 } label: {
                     Image(systemName: state.isRunning ? "stop.fill" : "play.fill")
                         .font(.system(size: 11))
-                        .foregroundStyle(.white.opacity(0.5))
-                        .frame(width: 24, height: 24)
-                        .background(Color.white.opacity(0.08))
+                        .foregroundStyle(.white.opacity(0.6))
+                        .frame(width: 26, height: 26)
+                        .background(Color.black.opacity(0.6))
                         .clipShape(Circle())
                 }
                 .buttonStyle(.plain)
                 .help(state.isRunning ? "Stop" : "Start")
             }
-            .padding(.top, 6)
+            .padding(.top, 3)
             .padding(.trailing, 4)
-            .padding(.bottom, 2)
+            .padding(.bottom, 1)
+
+            // Live transcript below icons
+            if state.isCoachingEnabled && state.isRunning {
+                LiveTranscriptView(transcript: state.liveTranscript)
+                    .padding(.horizontal, 8)
+            }
         }
         .onAppear {
             MenuActionHelper.shared.openSettingsAction = { openSettings() }

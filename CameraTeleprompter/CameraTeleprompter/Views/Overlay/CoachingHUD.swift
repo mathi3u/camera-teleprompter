@@ -57,6 +57,17 @@ struct CoachingHUD: View {
         .padding(.vertical, 6)
         .background(Color.black.opacity(0.5))
         .clipShape(Capsule())
+
+        // Debug info (temporary)
+        if !coachingState.debugStatus.isEmpty {
+            Text(coachingState.debugStatus)
+                .font(.system(size: 9, design: .monospaced))
+                .foregroundStyle(.yellow)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 3)
+                .background(Color.black.opacity(0.7))
+                .clipShape(Capsule())
+        }
     }
 
     private var scoreColor: Color {

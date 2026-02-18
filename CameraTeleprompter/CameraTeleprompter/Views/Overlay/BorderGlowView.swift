@@ -15,20 +15,25 @@ struct BorderGlowView: View {
         let color = activeGlowColor
 
         ZStack {
+            // Outermost ambient glow
+            cornerShape
+                .stroke(color.opacity(0.05 * boost), lineWidth: 50 + level * 40)
+                .blur(radius: 25 + level * 15)
+
             // Outer soft glow — expands with volume
             cornerShape
-                .stroke(color.opacity(0.08 * boost), lineWidth: 20 + level * 30)
-                .blur(radius: 12 + level * 10)
+                .stroke(color.opacity(0.10 * boost), lineWidth: 30 + level * 30)
+                .blur(radius: 16 + level * 12)
 
             // Mid glow
             cornerShape
-                .stroke(color.opacity(0.15 * boost), lineWidth: 8 + level * 15)
-                .blur(radius: 6 + level * 6)
+                .stroke(color.opacity(0.20 * boost), lineWidth: 12 + level * 18)
+                .blur(radius: 8 + level * 8)
 
             // Inner bright edge
             cornerShape
-                .stroke(color.opacity(0.4 * boost), lineWidth: 2 + level * 4)
-                .blur(radius: 1 + level * 2)
+                .stroke(color.opacity(0.45 * boost), lineWidth: 3 + level * 5)
+                .blur(radius: 2 + level * 3)
         }
         // Mask out the top edge — glow only on left, right, bottom
         .mask(
