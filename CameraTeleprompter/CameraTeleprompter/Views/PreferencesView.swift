@@ -46,21 +46,8 @@ struct PreferencesView: View {
                 }
             }
 
-            Section("Face Light") {
-                Toggle("Enable Face Light", isOn: $state.isFaceLightEnabled)
-
-                if state.isFaceLightEnabled {
-                    HStack {
-                        Text("Brightness")
-                        Slider(value: $state.faceLightBrightness, in: 0.3...1.0, step: 0.05)
-                        Text("\(Int(state.faceLightBrightness * 100))%")
-                            .monospacedDigit()
-                            .frame(width: 40, alignment: .trailing)
-                    }
-                }
-            }
         }
         .formStyle(.grouped)
-        .frame(width: 350, height: 420)
+        .frame(width: 350, height: 340)
     }
 }

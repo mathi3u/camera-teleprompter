@@ -33,13 +33,13 @@ struct MainWindowView: View {
         @Bindable var state = state
 
         VStack(spacing: 0) {
+            // Main content area with rounded corners
             ZStack {
-                Color.black.opacity(state.windowOpacity).ignoresSafeArea()
+                Color.black.opacity(state.windowOpacity)
 
                 switch state.phase {
                 case .idle:
                     if state.isCoachingEnabled && state.speechMode == .freeForm {
-                        // Free-form mode: no script editor, just a start prompt
                         VStack(spacing: 12) {
                             if state.isCoachingEnabled {
                                 Picker("", selection: $state.speechMode) {
@@ -52,17 +52,6 @@ struct MainWindowView: View {
                             Text("Press play to start")
                                 .font(.system(size: 16))
                                 .foregroundStyle(.white.opacity(0.4))
-                            Button {
-                                onStart()
-                            } label: {
-                                Image(systemName: "play.fill")
-                                    .font(.system(size: 12))
-                                    .foregroundStyle(.white.opacity(0.5))
-                                    .frame(width: 28, height: 28)
-                                    .background(Color.white.opacity(0.08))
-                                    .clipShape(Circle())
-                            }
-                            .buttonStyle(.plain)
                         }
                     } else {
                         VStack(spacing: 0) {
@@ -81,22 +70,6 @@ struct MainWindowView: View {
                                 .scrollContentBackground(.hidden)
                                 .padding(12)
                         }
-                        .overlay(alignment: .bottomTrailing) {
-                            Button {
-                                onStart()
-                            } label: {
-                                Image(systemName: "play.fill")
-                                    .font(.system(size: 12))
-                                    .foregroundStyle(.white.opacity(0.5))
-                                    .frame(width: 28, height: 28)
-                                    .background(Color.white.opacity(0.08))
-                                    .clipShape(Circle())
-                            }
-                            .buttonStyle(.plain)
-                            .disabled(state.currentScript.body.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                            .padding(.trailing, 12)
-                            .padding(.bottom, 8)
-                        }
                     }
                 case .countdown(let count):
                     CountdownView(count: count)
@@ -109,7 +82,7 @@ struct MainWindowView: View {
                     }
                 }
 
-                // Coaching overlays (layered on top when running + coaching enabled)
+                // Coaching radiance (layered on top when running + coaching enabled)
                 if state.isCoachingEnabled, case .running = state.phase {
                     BorderGlowView()
                         .allowsHitTesting(false)
@@ -117,13 +90,49 @@ struct MainWindowView: View {
                         .allowsHitTesting(false)
                 }
             }
+            .clipShape(RoundedRectangle(cornerRadius: 10))
 
-            Text("\u{2318}\u{23CE}: play  |  Space: pause  |  \u{2190}\u{2192}: speed  |  \u{2191}\u{2193}: skip  |  +/-: font  |  Esc: stop")
-                .font(.system(size: 10))
-                .foregroundStyle(.white.opacity(0.3))
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 4)
-                .background(Color.black.opacity(state.windowOpacity))
+            // Floating toolbar — transparent area below window content
+            HStack(spacing: 8) {
+                Spacer()
+
+                Button {
+                    state.isEdgeLightEnabled.toggle()
+                } label: {
+                    Image(systemName: "lightbulb.fill")
+                        .font(.system(size: 11))
+                        .foregroundStyle(state.isEdgeLightEnabled ? .yellow : .white.opacity(0.5))
+                        .frame(width: 24, height: 24)
+                        .background(Color.white.opacity(state.isEdgeLightEnabled ? 0.15 : 0.08))
+                        .clipShape(Circle())
+                }
+                .buttonStyle(.plain)
+                .help("Toggle Edge Light")
+
+                Button {
+                    if case .running = state.phase {
+                        onStop()
+                    } else if case .idle = state.phase {
+                        if state.speechMode == .freeForm && state.isCoachingEnabled {
+                            onStart()
+                        } else if !state.currentScript.body.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                            onStart()
+                        }
+                    }
+                } label: {
+                    Image(systemName: state.isRunning ? "stop.fill" : "play.fill")
+                        .font(.system(size: 11))
+                        .foregroundStyle(.white.opacity(0.5))
+                        .frame(width: 24, height: 24)
+                        .background(Color.white.opacity(0.08))
+                        .clipShape(Circle())
+                }
+                .buttonStyle(.plain)
+                .help(state.isRunning ? "Stop" : "Start")
+            }
+            .padding(.top, 6)
+            .padding(.trailing, 4)
+            .padding(.bottom, 2)
         }
         .onAppear {
             MenuActionHelper.shared.openSettingsAction = { openSettings() }

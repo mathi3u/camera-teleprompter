@@ -47,8 +47,7 @@
 		AA000032 /* BorderGlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000032; };
 		AA000033 /* CoachingHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000033; };
 		AA100009 /* FloatingMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB100009; };
-		AA000034 /* FaceLightPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000034; };
-		AA000035 /* FaceLightWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000035; };
+		AA000034 /* EdgeLightPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000034; };
 		AA000036 /* FreeFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000036; };
 /* End PBXBuildFile section */
 
@@ -105,8 +104,7 @@
 		AB000032 /* BorderGlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderGlowView.swift; sourceTree = "<group>"; };
 		AB000033 /* CoachingHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachingHUD.swift; sourceTree = "<group>"; };
 		AB100009 /* FloatingMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingMessageTests.swift; sourceTree = "<group>"; };
-		AB000034 /* FaceLightPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceLightPanel.swift; sourceTree = "<group>"; };
-		AB000035 /* FaceLightWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceLightWindowController.swift; sourceTree = "<group>"; };
+		AB000034 /* EdgeLightPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdgeLightPanel.swift; sourceTree = "<group>"; };
 		AB000036 /* FreeFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeFormView.swift; sourceTree = "<group>"; };
 		AF000001 /* CameraTeleprompter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CameraTeleprompter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF000002 /* CameraTeleprompterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CameraTeleprompterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -196,8 +194,7 @@
 				AB000008 /* OverlayPanel.swift */,
 				AB000009 /* OverlayWindowController.swift */,
 				AB000010 /* OverlayContentView.swift */,
-				AB000034 /* FaceLightPanel.swift */,
-				AB000035 /* FaceLightWindowController.swift */,
+				AB000034 /* EdgeLightPanel.swift */,
 			);
 			path = Windows;
 			sourceTree = "<group>";
@@ -400,8 +397,7 @@
 				AA000031 /* FloatingMessageOverlay.swift in Sources */,
 				AA000032 /* BorderGlowView.swift in Sources */,
 				AA000033 /* CoachingHUD.swift in Sources */,
-				AA000034 /* FaceLightPanel.swift in Sources */,
-				AA000035 /* FaceLightWindowController.swift in Sources */,
+				AA000034 /* EdgeLightPanel.swift in Sources */,
 				AA000036 /* FreeFormView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -12,7 +12,7 @@ struct CameraTeleprompterApp: App {
     @State private var speechTranscriber = SpeechTranscriber()
     @State private var pitchTracker = RealTimePitchTracker()
     @State private var audioPipeline = AudioPipelineController()
-    @State private var faceLightController = FaceLightWindowController()
+    @State private var edgeLightController = EdgeLightController()
     @State private var coachingStartTime: Date?
     @State private var speechAuthRequested = false
 
@@ -24,6 +24,13 @@ struct CameraTeleprompterApp: App {
             )
             .environment(state)
             .environment(coachingState)
+            .onChange(of: state.isEdgeLightEnabled) { _, enabled in
+                if enabled {
+                    edgeLightController.show()
+                } else {
+                    edgeLightController.close()
+                }
+            }
         }
         .windowStyle(.hiddenTitleBar)
         .defaultSize(width: 500, height: 220)
@@ -48,9 +55,6 @@ struct CameraTeleprompterApp: App {
             startCoaching()
         }
 
-        if state.isFaceLightEnabled {
-            faceLightController.show(brightness: state.faceLightBrightness)
-        }
     }
 
     private func stopTeleprompter() {
@@ -58,7 +62,6 @@ struct CameraTeleprompterApp: App {
         state.phase = .idle
         removeKeyMonitor()
         stopCoaching()
-        faceLightController.close()
     }
 
     private func startCoaching() {
