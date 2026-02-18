@@ -32,7 +32,7 @@ final class TeleprompterState {
 
     // MARK: - Coaching
     var speechMode: SpeechMode = .teleprompter
-    var isCoachingEnabled: Bool = false
+    var isCoachingEnabled: Bool = true
     var liveTranscript: String = ""
     var isFaceLightEnabled: Bool = false
     var faceLightBrightness: CGFloat = 0.8

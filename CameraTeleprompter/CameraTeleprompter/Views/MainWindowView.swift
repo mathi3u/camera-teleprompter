@@ -21,6 +21,7 @@ final class MenuActionHelper: NSObject {
 
 struct MainWindowView: View {
     @Environment(TeleprompterState.self) private var state
+    @Environment(CoachingState.self) private var coachingState
     @Environment(\.openSettings) private var openSettings
     @State private var rightClickMonitor: Any?
     @State private var keyboardMonitor: Any?
@@ -100,8 +101,20 @@ struct MainWindowView: View {
                 case .countdown(let count):
                     CountdownView(count: count)
                 case .running:
-                    TeleprompterScrollView()
-                        .environment(state)
+                    if state.speechMode == .freeForm && state.isCoachingEnabled {
+                        FreeFormView()
+                    } else {
+                        TeleprompterScrollView()
+                            .environment(state)
+                    }
+                }
+
+                // Coaching overlays (layered on top when running + coaching enabled)
+                if state.isCoachingEnabled, case .running = state.phase {
+                    BorderGlowView()
+                        .allowsHitTesting(false)
+                    FloatingMessageOverlay()
+                        .allowsHitTesting(false)
                 }
             }
 
