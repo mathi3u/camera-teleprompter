@@ -11,17 +11,20 @@ final class AudioPipelineController {
     private weak var transcriber: SpeechTranscriber?
     private var pitchTracker: RealTimePitchTracker?
     private var onPitch: ((Float) -> Void)?
+    private var onLevel: ((Float) -> Void)?
 
     func configure(
         levelMonitor: AudioLevelMonitor,
         transcriber: SpeechTranscriber,
         pitchTracker: RealTimePitchTracker,
-        onPitch: ((Float) -> Void)? = nil
+        onPitch: ((Float) -> Void)? = nil,
+        onLevel: ((Float) -> Void)? = nil
     ) {
         self.levelMonitor = levelMonitor
         self.transcriber = transcriber
         self.pitchTracker = pitchTracker
         self.onPitch = onPitch
+        self.onLevel = onLevel
     }
 
     func start() {
@@ -41,6 +44,7 @@ final class AudioPipelineController {
                 let db = AudioLevelMonitor.toDecibels(rmsValue)
                 DispatchQueue.main.async {
                     self.levelMonitor?.processLevel(db: db)
+                    self.onLevel?(db)
                 }
             }
 

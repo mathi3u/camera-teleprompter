@@ -10,6 +10,15 @@ final class CoachingState {
     var totalWordCount: Int = 0
     var startTime: Date?
 
+    /// Normalized audio level 0...1 for visual reactivity
+    var audioLevel: CGFloat = 0
+
+    /// Current pitch in Hz (0 = no pitch detected)
+    var currentPitch: Float = 0
+
+    /// Flash severity for reactive glow color changes (set on events, auto-clears)
+    var flashSeverity: CoachingEventSeverity? = nil
+
     // Deduction tracking
     private(set) var fillerDeduction: Int = 0
     private(set) var hedgingDeduction: Int = 0
@@ -99,5 +108,13 @@ final class CoachingState {
         runOnDeduction = 0
         paceDeduction = 0
         uptalkDeduction = 0
+        audioLevel = 0
+        currentPitch = 0
+        flashSeverity = nil
+    }
+
+    /// Update audio level from dB value (-60…0 range)
+    func updateAudioLevel(db: Float) {
+        audioLevel = CGFloat(max(0, min(1, (db + 50) / 40)))
     }
 }

@@ -4,7 +4,7 @@ final class SpeechAnalyzer {
 
     // Filler words from voice-tone-helper analysis.ts
     static let fillerWords: [String] = [
-        "um", "uh", "uhh", "umm", "erm", "er",
+        "um", "uh", "uhh", "umm", "erm", "er", "err",
         "like", "you know", "i mean", "right",
         "basically", "actually", "literally", "honestly",
         "so", "well", "anyway", "anyways",

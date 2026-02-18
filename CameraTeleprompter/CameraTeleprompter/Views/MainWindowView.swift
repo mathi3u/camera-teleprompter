@@ -1,5 +1,51 @@
 import SwiftUI
 
+/// Shows the last few words of the live transcript, fading older lines
+struct LiveTranscriptView: View {
+    let transcript: String
+
+    var body: some View {
+        let lines = recentLines
+        VStack(alignment: .leading, spacing: 2) {
+            ForEach(Array(lines.enumerated()), id: \.offset) { index, line in
+                Text(line)
+                    .font(.system(size: 11))
+                    .foregroundStyle(.white.opacity(opacity(for: index, of: lines.count)))
+                    .lineLimit(1)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(height: 38, alignment: .bottom)
+        .clipped()
+        .animation(.easeOut(duration: 0.15), value: transcript)
+    }
+
+    /// Split transcript into last 2 lines of ~8 words each
+    private var recentLines: [String] {
+        let words = transcript.split(separator: " ")
+        guard !words.isEmpty else { return [] }
+        let chunkSize = 8
+        let startIndex = max(0, words.count - chunkSize * 2)
+        let recent = Array(words[startIndex...])
+        var lines: [String] = []
+        for i in stride(from: 0, to: recent.count, by: chunkSize) {
+            let end = min(i + chunkSize, recent.count)
+            lines.append(recent[i..<end].joined(separator: " "))
+        }
+        // Keep last 2 lines max
+        if lines.count > 2 {
+            lines = Array(lines.suffix(2))
+        }
+        return lines
+    }
+
+    private func opacity(for index: Int, of total: Int) -> Double {
+        guard total > 1 else { return 0.6 }
+        // Older lines (lower index) are more faded
+        return index == total - 1 ? 0.6 : 0.3
+    }
+}
+
 /// Helper to bridge SwiftUI openSettings action to NSMenuItem targets
 final class MenuActionHelper: NSObject {
     static let shared = MenuActionHelper()
@@ -29,6 +75,10 @@ struct MainWindowView: View {
     var onStart: () -> Void
     var onStop: () -> Void
 
+    private var hasScript: Bool {
+        !state.currentScript.body.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
     var body: some View {
         @Bindable var state = state
 
@@ -39,46 +89,31 @@ struct MainWindowView: View {
 
                 switch state.phase {
                 case .idle:
-                    if state.isCoachingEnabled && state.speechMode == .freeForm {
-                        VStack(spacing: 12) {
-                            if state.isCoachingEnabled {
-                                Picker("", selection: $state.speechMode) {
-                                    Text("Script").tag(SpeechMode.teleprompter)
-                                    Text("Free").tag(SpeechMode.freeForm)
-                                }
-                                .pickerStyle(.segmented)
-                                .frame(width: 160)
-                            }
-                            Text("Press play to start")
-                                .font(.system(size: 16))
-                                .foregroundStyle(.white.opacity(0.4))
-                        }
-                    } else {
-                        VStack(spacing: 0) {
-                            if state.isCoachingEnabled {
-                                Picker("", selection: $state.speechMode) {
-                                    Text("Script").tag(SpeechMode.teleprompter)
-                                    Text("Free").tag(SpeechMode.freeForm)
-                                }
-                                .pickerStyle(.segmented)
-                                .frame(width: 160)
-                                .padding(.top, 8)
-                            }
-                            TextEditor(text: $state.currentScript.body)
+                    ZStack(alignment: .topLeading) {
+                        TextEditor(text: $state.currentScript.body)
+                            .font(.system(size: state.fontSize, weight: .regular, design: .monospaced))
+                            .foregroundStyle(.white)
+                            .scrollContentBackground(.hidden)
+                            .padding(12)
+
+                        if state.currentScript.body.isEmpty {
+                            Text("Optional: script goes here")
                                 .font(.system(size: state.fontSize, weight: .regular, design: .monospaced))
-                                .foregroundStyle(.white)
-                                .scrollContentBackground(.hidden)
+                                .foregroundStyle(.white.opacity(0.25))
                                 .padding(12)
+                                .padding(.top, 8)
+                                .padding(.leading, 5)
+                                .allowsHitTesting(false)
                         }
                     }
                 case .countdown(let count):
                     CountdownView(count: count)
                 case .running:
-                    if state.speechMode == .freeForm && state.isCoachingEnabled {
-                        FreeFormView()
-                    } else {
+                    if hasScript {
                         TeleprompterScrollView()
                             .environment(state)
+                    } else {
+                        FreeFormView()
                     }
                 }
 
@@ -90,7 +125,14 @@ struct MainWindowView: View {
                         .allowsHitTesting(false)
                 }
             }
-            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .clipShape(UnevenRoundedRectangle(topLeadingRadius: 0, bottomLeadingRadius: 10, bottomTrailingRadius: 10, topTrailingRadius: 0))
+
+            // Live transcript — fading words below the window
+            if state.isCoachingEnabled, case .running = state.phase {
+                LiveTranscriptView(transcript: state.liveTranscript)
+                    .padding(.horizontal, 8)
+                    .padding(.top, 4)
+            }
 
             // Floating toolbar — transparent area below window content
             HStack(spacing: 8) {
@@ -113,11 +155,7 @@ struct MainWindowView: View {
                     if case .running = state.phase {
                         onStop()
                     } else if case .idle = state.phase {
-                        if state.speechMode == .freeForm && state.isCoachingEnabled {
-                            onStart()
-                        } else if !state.currentScript.body.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                            onStart()
-                        }
+                        onStart()
                     }
                 } label: {
                     Image(systemName: state.isRunning ? "stop.fill" : "play.fill")
@@ -179,19 +217,11 @@ struct MainWindowView: View {
                 MenuActionHelper.shared.openPreferences()
                 return nil
             }
-            // Cmd+Enter starts playback
+            // Cmd+Enter starts/stops
             if flags.contains(.command) && event.keyCode == 36 {
                 if case .idle = state.phase {
-                    // In freeForm mode, no script needed
-                    if state.speechMode == .freeForm && state.isCoachingEnabled {
-                        onStart()
-                        return nil
-                    }
-                    // In teleprompter mode, require script
-                    if !state.currentScript.body.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                        onStart()
-                        return nil
-                    }
+                    onStart()
+                    return nil
                 }
             }
             return event

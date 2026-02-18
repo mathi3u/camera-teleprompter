@@ -36,14 +36,6 @@ struct PreferencesView: View {
             }
             Section("Coaching") {
                 Toggle("Enable Coaching", isOn: $state.isCoachingEnabled)
-
-                if state.isCoachingEnabled {
-                    Picker("Mode", selection: $state.speechMode) {
-                        Text("Script").tag(SpeechMode.teleprompter)
-                        Text("Free").tag(SpeechMode.freeForm)
-                    }
-                    .pickerStyle(.segmented)
-                }
             }
 
         }

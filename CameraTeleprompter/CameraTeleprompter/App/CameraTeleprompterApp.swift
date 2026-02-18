@@ -44,9 +44,13 @@ struct CameraTeleprompterApp: App {
     }
 
     private func startTeleprompter() {
+        // Auto-detect mode: script has text → teleprompter, empty → freeForm
+        let hasScript = !state.currentScript.body.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        state.speechMode = hasScript ? .teleprompter : .freeForm
+
         state.scrollEngine.speed = state.scrollSpeed
         state.phase = .running
-        if state.speechMode == .teleprompter {
+        if hasScript {
             state.scrollEngine.start()
         }
         installKeyMonitor()
@@ -87,6 +91,23 @@ struct CameraTeleprompterApp: App {
                 if case .hedging = event.type {
                     coachingState.hedgingCount += 1
                 }
+
+                // Flash glow color on warnings/alerts
+                if event.severity == .warning || event.severity == .alert {
+                    coachingState.flashSeverity = event.severity
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                        coachingState.flashSeverity = nil
+                    }
+                }
+            }
+
+            // Detect sentence ends for uptalk tracking
+            if transcript.contains(where: { $0 == "." || $0 == "!" || $0 == "?" }) {
+                pitchTracker.markSentenceEnd()
+                if pitchTracker.sentenceCount > 0 {
+                    let uptalkRatio = Double(pitchTracker.uptalkCount) / Double(pitchTracker.sentenceCount)
+                    coachingState.applyUptalkRatio(uptalkRatio)
+                }
             }
 
             // Update rates based on elapsed time
@@ -108,7 +129,13 @@ struct CameraTeleprompterApp: App {
         audioPipeline.configure(
             levelMonitor: levelMonitor,
             transcriber: speechTranscriber,
-            pitchTracker: pitchTracker
+            pitchTracker: pitchTracker,
+            onPitch: { [self] pitch in
+                coachingState.currentPitch = pitch
+            },
+            onLevel: { [self] db in
+                coachingState.updateAudioLevel(db: db)
+            }
         )
 
         speechTranscriber.start()
@@ -174,14 +201,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             guard let screen = window.screen ?? NSScreen.main else { return }
 
             let screenFrame = screen.frame
-            let menuBarHeight = screen.frame.height - screen.visibleFrame.height - screen.visibleFrame.origin.y
             let windowWidth: CGFloat = 500
             let windowHeight: CGFloat = 220
             let x = screenFrame.midX - windowWidth / 2
-            let y = screenFrame.maxY - menuBarHeight - windowHeight
+            let y = screenFrame.maxY - windowHeight
 
             window.setFrame(NSRect(x: x, y: y, width: windowWidth, height: windowHeight), display: true)
-            window.level = .floating
+            window.level = .statusBar
             window.isOpaque = false
             window.backgroundColor = .clear
             window.hasShadow = false

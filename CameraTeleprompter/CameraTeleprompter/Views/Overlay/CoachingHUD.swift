@@ -25,6 +25,18 @@ struct CoachingHUD: View {
                     .foregroundStyle(.white.opacity(0.8))
             }
 
+            // Pitch indicator
+            if coachingState.currentPitch > 0 {
+                HStack(spacing: 4) {
+                    Image(systemName: "waveform")
+                        .font(.system(size: 10))
+                        .foregroundStyle(.white.opacity(0.6))
+                    Text("\(Int(coachingState.currentPitch)) Hz")
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
+                        .foregroundStyle(.white.opacity(0.8))
+                }
+            }
+
             // Filler count badge
             if coachingState.fillerCount > 0 {
                 HStack(spacing: 4) {
