@@ -557,6 +557,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CameraTeleprompter/App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Toner;
+				INFOPLIST_KEY_CFBundleName = Toner;
 				INFOPLIST_KEY_LSUIElement = NO;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Toner uses the microphone to detect when you are speaking so it can provide real-time coaching feedback.";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Toner uses speech recognition to provide real-time coaching feedback on your speaking.";
@@ -584,6 +585,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CameraTeleprompter/App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Toner;
+				INFOPLIST_KEY_CFBundleName = Toner;
 				INFOPLIST_KEY_LSUIElement = NO;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Toner uses the microphone to detect when you are speaking so it can provide real-time coaching feedback.";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Toner uses speech recognition to provide real-time coaching feedback on your speaking.";
