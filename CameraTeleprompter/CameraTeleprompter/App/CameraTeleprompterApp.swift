@@ -24,16 +24,16 @@ struct CameraTeleprompterApp: App {
             )
             .environment(state)
             .environment(coachingState)
-            .onChange(of: state.isEdgeLightEnabled) { _, enabled in
-                if enabled {
-                    edgeLightController.show()
-                } else {
+            .onChange(of: state.edgeLightMode) { _, mode in
+                if mode == .off {
                     edgeLightController.close()
+                } else {
+                    edgeLightController.show(brightness: mode.brightness)
                 }
             }
         }
         .windowStyle(.hiddenTitleBar)
-        .defaultSize(width: 500, height: 260)
+        .defaultSize(width: 620, height: 320)
 
         Settings {
             PreferencesView()
@@ -108,6 +108,7 @@ struct CameraTeleprompterApp: App {
         // Set up transcriber callbacks
         speechTranscriber.onPartialTranscript = { [self] transcript in
             state.liveTranscript = transcript
+            coachingState.debugStatus = "words=\(transcript.split(separator: " ").count)"
             let events = speechAnalyzer.processPartialTranscript(transcript)
             for event in events {
                 coachingState.addEvent(event)
@@ -199,7 +200,9 @@ struct CameraTeleprompterApp: App {
 
         speechTranscriber.start()
         audioPipeline.start()
-        coachingState.debugStatus = ""
+
+        let auth = SpeechTranscriber.authorizationStatus.rawValue
+        coachingState.debugStatus = "auth=\(auth) tx=\(speechTranscriber.isTranscribing) eng=\(audioPipeline.isRunning)"
     }
 
     private func stopCoaching() {
@@ -261,8 +264,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             guard let screen = window.screen ?? NSScreen.main else { return }
 
             let screenFrame = screen.frame
-            let windowWidth: CGFloat = 500
-            let windowHeight: CGFloat = 260
+            let glowPad: CGFloat = 60
+            let windowWidth: CGFloat = 500 + glowPad * 2
+            let windowHeight: CGFloat = 260 + glowPad
             let x = screenFrame.midX - windowWidth / 2
             let y = screenFrame.maxY - windowHeight
 

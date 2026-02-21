@@ -5,6 +5,26 @@ enum DisplayMode: String, CaseIterable, Codable {
     case floating = "Floating"
 }
 
+enum EdgeLightMode: String, CaseIterable {
+    case off, medium, high
+
+    var next: EdgeLightMode {
+        switch self {
+        case .off: return .medium
+        case .medium: return .high
+        case .high: return .off
+        }
+    }
+
+    var brightness: CGFloat {
+        switch self {
+        case .off: return 0
+        case .medium: return 1.0
+        case .high: return 2.0
+        }
+    }
+}
+
 enum AppPhase {
     case idle
     case countdown(Int)
@@ -36,7 +56,7 @@ final class TeleprompterState {
     var liveTranscript: String = ""
 
     // MARK: - Edge Light
-    var isEdgeLightEnabled: Bool = false
+    var edgeLightMode: EdgeLightMode = .off
 
     // MARK: - State
     var phase: AppPhase = .idle

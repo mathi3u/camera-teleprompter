@@ -79,6 +79,14 @@ struct MainWindowView: View {
         !state.currentScript.body.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
+    private var edgeLightIconColor: Color {
+        switch state.edgeLightMode {
+        case .off: return .white.opacity(0.6)
+        case .medium: return .yellow
+        case .high: return .orange
+        }
+    }
+
     var body: some View {
         @Bindable var state = state
 
@@ -117,33 +125,32 @@ struct MainWindowView: View {
                     }
                 }
 
-                // Coaching radiance (layered on top when running + coaching enabled)
+                // Floating messages (inside clip)
                 if state.isCoachingEnabled, case .running = state.phase {
-                    BorderGlowView()
-                        .allowsHitTesting(false)
                     FloatingMessageOverlay()
                         .allowsHitTesting(false)
                 }
             }
             .frame(height: 180)
             .clipShape(UnevenRoundedRectangle(topLeadingRadius: 0, bottomLeadingRadius: 10, bottomTrailingRadius: 10, topTrailingRadius: 0))
+            .modifier(OutwardGlowModifier(isActive: state.isCoachingEnabled && state.isRunning))
 
             // Floating toolbar — two separate circle icons
             HStack(spacing: 8) {
                 Spacer()
 
                 Button {
-                    state.isEdgeLightEnabled.toggle()
+                    state.edgeLightMode = state.edgeLightMode.next
                 } label: {
-                    Image(systemName: "lightbulb.fill")
+                    Image(systemName: state.edgeLightMode == .off ? "lightbulb" : "lightbulb.fill")
                         .font(.system(size: 11))
-                        .foregroundStyle(state.isEdgeLightEnabled ? .yellow : .white.opacity(0.6))
+                        .foregroundStyle(edgeLightIconColor)
                         .frame(width: 26, height: 26)
                         .background(Color.black.opacity(0.6))
                         .clipShape(Circle())
                 }
                 .buttonStyle(.plain)
-                .help("Toggle Edge Light")
+                .help("Edge Light: \(state.edgeLightMode.rawValue)")
 
                 Button {
                     if case .running = state.phase {
@@ -172,6 +179,7 @@ struct MainWindowView: View {
                     .padding(.horizontal, 8)
             }
         }
+        .padding(.horizontal, 60)
         .onAppear {
             MenuActionHelper.shared.openSettingsAction = { openSettings() }
             installRightClickMonitor()

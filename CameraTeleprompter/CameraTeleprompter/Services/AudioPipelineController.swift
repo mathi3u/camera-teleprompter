@@ -12,6 +12,7 @@ final class AudioPipelineController {
     private var pitchTracker: RealTimePitchTracker?
     private var onPitch: ((Float) -> Void)?
     private var onLevel: ((Float) -> Void)?
+    private var deviceChangeObserver: NSObjectProtocol?
 
     func configure(
         levelMonitor: AudioLevelMonitor,
@@ -65,12 +66,43 @@ final class AudioPipelineController {
             try engine.start()
             audioEngine = engine
             isRunning = true
+            observeDeviceChanges()
         } catch {
             print("AudioPipelineController: Failed to start engine: \(error)")
         }
     }
 
+    private func observeDeviceChanges() {
+        deviceChangeObserver = NotificationCenter.default.addObserver(
+            forName: .AVAudioEngineConfigurationChange,
+            object: audioEngine,
+            queue: .main
+        ) { [weak self] _ in
+            self?.restart()
+        }
+    }
+
+    private func restart() {
+        guard isRunning else { return }
+        // Stop engine
+        audioEngine?.inputNode.removeTap(onBus: 0)
+        audioEngine?.stop()
+        audioEngine = nil
+        isRunning = false
+        // Restart transcriber so it creates a fresh recognition request
+        transcriber?.stop()
+        // Brief delay to let the new device settle
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.transcriber?.start()
+            self?.start()
+        }
+    }
+
     func stop() {
+        if let observer = deviceChangeObserver {
+            NotificationCenter.default.removeObserver(observer)
+            deviceChangeObserver = nil
+        }
         audioEngine?.inputNode.removeTap(onBus: 0)
         audioEngine?.stop()
         audioEngine = nil

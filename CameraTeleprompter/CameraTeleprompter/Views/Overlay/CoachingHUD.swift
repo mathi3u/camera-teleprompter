@@ -59,15 +59,27 @@ struct CoachingHUD: View {
         .clipShape(Capsule())
 
         // Debug info (temporary)
-        if !coachingState.debugStatus.isEmpty {
-            Text(coachingState.debugStatus)
+        HStack(spacing: 6) {
+            // Mic level bar
+            RoundedRectangle(cornerRadius: 2)
+                .fill(coachingState.audioLevel > 0.3 ? .green : .gray)
+                .frame(width: max(4, coachingState.audioLevel * 60), height: 6)
+                .animation(.easeOut(duration: 0.1), value: coachingState.audioLevel)
+
+            Text("mic \(Int(coachingState.audioLevel * 100))%")
                 .font(.system(size: 9, design: .monospaced))
-                .foregroundStyle(.yellow)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 3)
-                .background(Color.black.opacity(0.7))
-                .clipShape(Capsule())
+                .foregroundStyle(.white.opacity(0.6))
+
+            if !coachingState.debugStatus.isEmpty {
+                Text(coachingState.debugStatus)
+                    .font(.system(size: 9, design: .monospaced))
+                    .foregroundStyle(.yellow)
+            }
         }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 3)
+        .background(Color.black.opacity(0.7))
+        .clipShape(Capsule())
     }
 
     private var scoreColor: Color {

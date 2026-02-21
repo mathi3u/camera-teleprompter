@@ -1,69 +1,51 @@
 import SwiftUI
 
-struct BorderGlowView: View {
+private let contentShape = UnevenRoundedRectangle(
+    topLeadingRadius: 0, bottomLeadingRadius: 10,
+    bottomTrailingRadius: 10, topTrailingRadius: 0
+)
+
+/// Applies outward glow on left, right, and bottom edges
+struct OutwardGlowModifier: ViewModifier {
     @Environment(CoachingState.self) private var coachingState
     @State private var isPulsing = false
+    var isActive: Bool
 
-    private let cornerShape = UnevenRoundedRectangle(
-        topLeadingRadius: 0, bottomLeadingRadius: 10,
-        bottomTrailingRadius: 10, topTrailingRadius: 0
-    )
+    func body(content: Content) -> some View {
+        if isActive {
+            let level = coachingState.audioLevel
+            let boost = 0.3 + level * 0.7
+            let color = activeGlowColor
 
-    var body: some View {
-        let level = coachingState.audioLevel
-        let boost = 0.3 + level * 0.7
-        let color = activeGlowColor
-
-        ZStack {
-            // Outermost ambient glow
-            cornerShape
-                .stroke(color.opacity(0.05 * boost), lineWidth: 50 + level * 40)
-                .blur(radius: 25 + level * 15)
-
-            // Outer soft glow — expands with volume
-            cornerShape
-                .stroke(color.opacity(0.10 * boost), lineWidth: 30 + level * 30)
-                .blur(radius: 16 + level * 12)
-
-            // Mid glow
-            cornerShape
-                .stroke(color.opacity(0.20 * boost), lineWidth: 12 + level * 18)
-                .blur(radius: 8 + level * 8)
-
-            // Inner bright edge
-            cornerShape
-                .stroke(color.opacity(0.45 * boost), lineWidth: 3 + level * 5)
-                .blur(radius: 2 + level * 3)
-        }
-        // Mask out the top edge — glow only on left, right, bottom
-        .mask(
-            LinearGradient(
-                colors: [.clear, .white, .white],
-                startPoint: .top,
-                endPoint: UnitPoint(x: 0.5, y: 0.12)
-            )
-        )
-        .scaleEffect(isPulsing ? 1.02 : 1.0)
-        .animation(.easeOut(duration: 0.08), value: coachingState.audioLevel)
-        .animation(.easeInOut(duration: 0.5), value: coachingState.flashSeverity == nil)
-        .animation(.easeInOut(duration: 0.3), value: isPulsing)
-        .onChange(of: coachingState.recentEvents.count) { _, _ in
-            guard let last = coachingState.recentEvents.last else { return }
-
-            // Flash on any warning or alert event
-            switch last.severity {
-            case .warning, .alert:
-                isPulsing = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-                    isPulsing = false
+            content
+                // Opaque black behind content so shadows can't bleed through
+                .background { contentShape.fill(.black) }
+                // Outward glow on all sides
+                .shadow(color: color.opacity(0.6 * boost), radius: 6 + level * 6)
+                .shadow(color: color.opacity(0.4 * boost), radius: 16 + level * 12)
+                .shadow(color: color.opacity(0.2 * boost), radius: 35 + level * 20)
+                .shadow(color: color.opacity(0.1 * boost), radius: 60 + level * 30)
+                .scaleEffect(isPulsing ? 1.01 : 1.0, anchor: .bottom)
+                .animation(.easeOut(duration: 0.08), value: coachingState.audioLevel)
+                .animation(.easeInOut(duration: 0.5), value: coachingState.flashSeverity == nil)
+                .animation(.easeInOut(duration: 0.3), value: isPulsing)
+                .onChange(of: coachingState.recentEvents.count) { _, _ in
+                    guard let last = coachingState.recentEvents.last else { return }
+                    switch last.severity {
+                    case .warning, .alert:
+                        isPulsing = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                            isPulsing = false
+                        }
+                    default:
+                        break
+                    }
                 }
-            default:
-                break
-            }
+        } else {
+            content
         }
     }
 
-    /// Active color: flash color overrides health-based color
     private var activeGlowColor: Color {
         if let flash = coachingState.flashSeverity {
             switch flash {
@@ -76,7 +58,6 @@ struct BorderGlowView: View {
         return healthColor
     }
 
-    /// Base color from confidence score: red → orange → yellow → green
     private var healthColor: Color {
         let h = coachingState.healthFraction
         if h < 0.5 {

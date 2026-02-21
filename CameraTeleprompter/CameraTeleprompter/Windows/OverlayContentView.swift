@@ -31,8 +31,6 @@ struct OverlayContentView: View {
 
             // Coaching overlays (layered on top when running + coaching enabled)
             if state.isCoachingEnabled, case .running = state.phase {
-                BorderGlowView()
-                    .allowsHitTesting(false)
                 FloatingMessageOverlay()
                     .allowsHitTesting(false)
             }
